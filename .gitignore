@@ -1,0 +1,11 @@
+.next
+node_modules
+package-lock.json
+test/setup/UnichainJS.js
+coverage
+yarn-error.log
+/dist
+.env
+.vscode/
+.idea/
+example/
