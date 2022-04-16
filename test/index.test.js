@@ -661,27 +661,6 @@ describe('UnichainJS Instance', function () {
         });
     });
 
-
-    describe("#toSun", function () {
-
-        it("should convert some unx to sun", function () {
-
-            let input = 324;
-            let expected = 324e6;
-            assert.equal(UnichainJS.toSun(input), expected);
-        });
-    });
-
-
-    describe("#fromSun", function () {
-        it("should convert a negative number to an hex string to a number", function () {
-
-            let input = 3245e6;
-            let expected = 3245;
-            assert.equal(UnichainJS.fromSun(input), expected);
-        });
-    });
-
     describe("#isAddress", function () {
         it("should verify that a string is a valid base58 address", function () {
 

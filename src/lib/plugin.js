@@ -32,7 +32,7 @@ export default class Plugin {
         }
         if (semver.satisfies(UnichainJS.version, pluginInterface.requires)) {
             if (pluginInterface.fullClass) {
-                // plug the entire class at the same level of unichainJS.unx
+                // plug the entire class at the same level of unichainJS.api
                 let className = plugin.constructor.name
                 let classInstanceName = className.substring(0, 1).toLowerCase() + className.substring(1)
                 if (className !== classInstanceName) {
@@ -41,7 +41,7 @@ export default class Plugin {
                     result.libs.push(className)
                 }
             } else {
-                // plug methods into a class, like unx
+                // plug methods into a class, like api
                 for (let component in pluginInterface.components) {
                     if (!this.unichainJS.hasOwnProperty(component)) {
                         continue

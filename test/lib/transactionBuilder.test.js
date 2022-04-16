@@ -47,15 +47,15 @@ describe('UnichainJS.transactionBuilder', function () {
 
     });
 
-    describe('#sendUnx()', function () {
+    describe('#sendUnw()', function () {
 
-        it(`should send 10 unx from default address to accounts[1]`, async function () {
+        it(`should send 10 unw from default address to accounts[1]`, async function () {
             const params = [
                 [accounts.b58[1], 10, {permissionId: 2}],
                 [accounts.b58[1], 10]
             ];
             for (let param of params) {
-                const transaction = await unichainJS.transactionBuilder.sendUnx(...param);
+                const transaction = await unichainJS.transactionBuilder.sendUnw(...param);
 
                 const parameter = txPars(transaction);
 
@@ -68,13 +68,13 @@ describe('UnichainJS.transactionBuilder', function () {
             }
         });
 
-        it(`should send 10 unx from accounts[0] to accounts[1]`, async function () {
+        it(`should send 10 unw from accounts[0] to accounts[1]`, async function () {
             const params = [
                 [accounts.b58[1], 10, accounts.b58[0], {permissionId: 2}],
                 [accounts.b58[1], 10, accounts.b58[0]]
             ];
             for (let param of params) {
-                const transaction = await unichainJS.transactionBuilder.sendUnx(...param);
+                const transaction = await unichainJS.transactionBuilder.sendUnw(...param);
                 const parameter = txPars(transaction);
 
                 assert.equal(transaction.txID.length, 64);
@@ -90,7 +90,7 @@ describe('UnichainJS.transactionBuilder', function () {
         it('should throw if an invalid address is passed', async function () {
 
             await assertThrow(
-                unichainJS.transactionBuilder.sendUnx('40f0b27e3d16060a5b0e8e995120e00', 10),
+                unichainJS.transactionBuilder.sendUnw('40f0b27e3d16060a5b0e8e995120e00', 10),
                 'Invalid recipient address provided'
             );
 
@@ -99,7 +99,7 @@ describe('UnichainJS.transactionBuilder', function () {
         it('should throw if an invalid amount is passed', async function () {
 
             await assertThrow(
-                unichainJS.transactionBuilder.sendUnx(accounts.hex[2], -10),
+                unichainJS.transactionBuilder.sendUnw(accounts.hex[2], -10),
                 'Invalid amount provided'
             );
 
@@ -108,7 +108,7 @@ describe('UnichainJS.transactionBuilder', function () {
         it('should throw if an invalid origin address is passed', async function () {
 
             await assertThrow(
-                unichainJS.transactionBuilder.sendUnx(accounts.hex[3], 10, '40f0b27e3d16060a5b0e8e995120e00'),
+                unichainJS.transactionBuilder.sendUnw(accounts.hex[3], 10, '40f0b27e3d16060a5b0e8e995120e00'),
                 'Invalid origin address provided'
             );
 
@@ -118,8 +118,8 @@ describe('UnichainJS.transactionBuilder', function () {
         it('should throw if trying to transfer to itself', async function () {
 
             await assertThrow(
-                unichainJS.transactionBuilder.sendUnx(accounts.hex[3], 10, accounts.hex[3]),
-                'Cannot transfer UNX to the same account'
+                unichainJS.transactionBuilder.sendUnw(accounts.hex[3], 10, accounts.hex[3]),
+                'Cannot transfer UNW to the same account'
             );
 
         });
@@ -127,7 +127,7 @@ describe('UnichainJS.transactionBuilder', function () {
         it('should throw if trying to transfer from an account with not enough funds', async function () {
 
             await assertThrow(
-                unichainJS.transactionBuilder.sendUnx(accounts.hex[3], 10, emptyAccount.address.base58),
+                unichainJS.transactionBuilder.sendUnw(accounts.hex[3], 10, emptyAccount.address.base58),
                 null,
                 'ContractValidateException'
             );
@@ -179,9 +179,9 @@ describe('UnichainJS.transactionBuilder', function () {
 
                     await broadcaster(null, accounts.pks[8 + i], transaction)
 
-                    const tokenList = await unichainJS.unx.getTokensIssuedByAddress(accounts.b58[8 + i])
+                    const tokenList = await unichainJS.api.getTokensIssuedByAddress(accounts.b58[8 + i])
                     const tokenID = tokenList[options.name].id
-                    const token = await unichainJS.unx.getTokenByID(tokenID)
+                    const token = await unichainJS.api.getTokenByID(tokenID)
 
                     assert.equal(token.vote_score, options.voteScore);
                     assert.equal(token.precision, options.precision);
@@ -263,14 +263,14 @@ describe('UnichainJS.transactionBuilder', function () {
 
         });
 
-        it('should throw if UNX ratio is not a positive integer', async function () {
+        it('should throw if UNW ratio is not a positive integer', async function () {
 
             const options = getTokenOptions();
             options.unxRatio = {};
 
             await assertThrow(
                 unichainJS.transactionBuilder.createToken(options),
-                'UNX ratio must be a positive integer'
+                'UNW ratio must be a positive integer'
             );
 
         });
@@ -565,7 +565,7 @@ describe('UnichainJS.transactionBuilder', function () {
 
             let tokenList
             while (!tokenList) {
-                tokenList = await unichainJS.unx.getTokensIssuedByAddress(accounts.b58[2])
+                tokenList = await unichainJS.api.getTokensIssuedByAddress(accounts.b58[2])
             }
             if (isAllowSameTokenNameApproved) {
                 tokenID = tokenList[tokenOptions.name].id
@@ -711,7 +711,7 @@ describe('UnichainJS.transactionBuilder', function () {
 
             let tokenList
             while (!tokenList) {
-                tokenList = await unichainJS.unx.getTokensIssuedByAddress(accounts.b58[5])
+                tokenList = await unichainJS.api.getTokensIssuedByAddress(accounts.b58[5])
             }
             if (isAllowSameTokenNameApproved) {
                 tokenID = tokenList[tokenOptions.name].id
@@ -725,10 +725,10 @@ describe('UnichainJS.transactionBuilder', function () {
 
             let token
             if (isAllowSameTokenNameApproved) {
-                token = await unichainJS.unx.getTokenByID(tokenID)
+                token = await unichainJS.api.getTokenByID(tokenID)
                 assert.equal(token.id, tokenID)
             } else {
-                token = await unichainJS.unx.getTokenFromID(tokenID)
+                token = await unichainJS.api.getTokenFromID(tokenID)
             }
             assert.equal(token.name, tokenOptions.name)
         })
@@ -828,7 +828,7 @@ describe('UnichainJS.transactionBuilder', function () {
 
             let tokenList
             while (!tokenList) {
-                tokenList = await unichainJS.unx.getTokensIssuedByAddress(accounts.b58[6])
+                tokenList = await unichainJS.api.getTokensIssuedByAddress(accounts.b58[6])
             }
 
             if (isAllowSameTokenNameApproved) {
@@ -843,10 +843,10 @@ describe('UnichainJS.transactionBuilder', function () {
 
             let token
             if (isAllowSameTokenNameApproved) {
-                token = await unichainJS.unx.getTokenByID(tokenID)
+                token = await unichainJS.api.getTokenByID(tokenID)
                 assert.equal(token.id, tokenID)
             } else {
-                token = await unichainJS.unx.getTokenFromID(tokenID)
+                token = await unichainJS.api.getTokenFromID(tokenID)
             }
             assert.equal(token.name, tokenOptions.name)
         })
@@ -945,7 +945,7 @@ describe('UnichainJS.transactionBuilder', function () {
 
         let parameters = [{"key": 0, "value": 100000}, {"key": 1, "value": 2}]
 
-        it('should allow the SR account to create a new proposal as a single object', async function () {
+        it('should allow the Witness account to create a new proposal as a single object', async function () {
 
             const inputs = [
                 [parameters[0], ADDRESS_BASE58, {permissionId: 2}],
@@ -964,7 +964,7 @@ describe('UnichainJS.transactionBuilder', function () {
 
         })
 
-        it('should allow the SR account to create a new proposal as an array of objects', async function () {
+        it('should allow the Witness account to create a new proposal as an array of objects', async function () {
 
             const inputs = [
                 [parameters, ADDRESS_BASE58, {permissionId: 2}],
@@ -994,7 +994,7 @@ describe('UnichainJS.transactionBuilder', function () {
         });
 
 
-        it("should throw if the issuer address is not an SR", async function () {
+        it("should throw if the issuer address is not an Witness", async function () {
 
             await assertThrow(
                 unichainJS.transactionBuilder.createProposal(parameters, accounts.b58[0]),
@@ -1022,19 +1022,19 @@ describe('UnichainJS.transactionBuilder', function () {
 
             await broadcaster(unichainJS.transactionBuilder.createProposal(parameters, ADDRESS_BASE58), PRIVATE_KEY)
 
-            proposals = await unichainJS.unx.listProposals();
+            proposals = await unichainJS.api.listProposals();
 
         })
 
         after(async function () {
-            proposals = await unichainJS.unx.listProposals();
+            proposals = await unichainJS.api.listProposals();
             for (let proposal of proposals) {
                 if (proposal.state !== 'CANCELED')
                     await broadcaster(unichainJS.transactionBuilder.deleteProposal(proposal.proposal_id), PRIVATE_KEY)
             }
         })
 
-        it('should allow the SR to delete its own proposal', async function () {
+        it('should allow the Witness to delete its own proposal', async function () {
 
             const params = [
                 [proposals[0].proposal_id, {permissionId: 2}],
@@ -1067,13 +1067,13 @@ describe('UnichainJS.transactionBuilder', function () {
 
     });
 
-    describe.skip("#applyForSR", async function () {
+    describe.skip("#applyForWitness", async function () {
 
         let url = 'https://unichain.world';
 
-        it('should allow accounts[0] to apply for SR', async function () {
+        it('should allow accounts[0] to apply for Witness', async function () {
 
-            const transaction = await unichainJS.transactionBuilder.applyForSR(accounts.b58[20], url);
+            const transaction = await unichainJS.transactionBuilder.applyForWitness(accounts.b58[20], url);
             const parameter = txPars(transaction);
 
             assert.equal(parameter.value.owner_address, accounts.hex[20]);
@@ -1126,12 +1126,12 @@ describe('UnichainJS.transactionBuilder', function () {
 
         before(async function () {
 
-            await broadcaster(unichainJS.transactionBuilder.applyForSR(accounts.b58[0], url), accounts.pks[0])
+            await broadcaster(unichainJS.transactionBuilder.applyForWitness(accounts.b58[0], url), accounts.pks[0])
             await broadcaster(unichainJS.transactionBuilder.freezeBalance(100e6, 3, 'BANDWIDTH', accounts.b58[1]), accounts.pks[1])
         })
 
 
-        it('should allows accounts[1] to vote for accounts[0] as SR', async function () {
+        it('should allows accounts[1] to vote for accounts[0] as Witness', async function () {
             let votes = {}
             votes[accounts.hex[0]] = 5
 
@@ -1197,7 +1197,7 @@ describe('UnichainJS.transactionBuilder', function () {
             }, accounts.hex[6]);
             await broadcaster(null, accounts.pks[6], transaction);
             while (true) {
-                const tx = await unichainJS.unx.getTransactionInfo(transaction.txID);
+                const tx = await unichainJS.api.getTransactionInfo(transaction.txID);
                 if (Object.keys(tx).length === 0) {
                     await wait(3);
                     continue;
@@ -1245,7 +1245,7 @@ describe('UnichainJS.transactionBuilder', function () {
             }, accounts.hex[6]);
             await broadcaster(null, accounts.pks[6], transaction);
             while (true) {
-                const tx = await unichainJS.unx.getTransactionInfo(transaction.txID);
+                const tx = await unichainJS.api.getTransactionInfo(transaction.txID);
                 if (Object.keys(tx).length === 0) {
                     await wait(3);
                     continue;
@@ -1294,7 +1294,7 @@ describe('UnichainJS.transactionBuilder', function () {
             }, accounts.hex[7]);
             await broadcaster(null, accounts.pks[7], transaction);
             while (true) {
-                const tx = await unichainJS.unx.getTransactionInfo(transaction.txID);
+                const tx = await unichainJS.api.getTransactionInfo(transaction.txID);
                 if (Object.keys(tx).length === 0) {
                     await wait(3);
                     continue;
@@ -1311,7 +1311,7 @@ describe('UnichainJS.transactionBuilder', function () {
             const ownerAddress = accounts.hex[7];
 
             // verify contract abi before
-            contract = await unichainJS.unx.getContract(contractAddress);
+            contract = await unichainJS.api.getContract(contractAddress);
             assert.isTrue(Object.keys(contract.abi).length > 0)
 
             // clear abi
@@ -1323,7 +1323,7 @@ describe('UnichainJS.transactionBuilder', function () {
 
             // verify contract abi after
             while (true) {
-                contract = await unichainJS.unx.getContract(contractAddress);
+                contract = await unichainJS.api.getContract(contractAddress);
                 if (Object.keys(contract.abi).length > 0) {
                     await wait(3);
                     continue;
@@ -1337,7 +1337,7 @@ describe('UnichainJS.transactionBuilder', function () {
 
     describe("#updateBrokerage", async function () {
 
-        it('should update sr brokerage successfully', async function () {
+        it('should update witness brokerage successfully', async function () {
             // const transaction = await unichainJS.transactionBuilder.updateBrokerage(10, accounts.hex[1]);
         });
 
@@ -1382,7 +1382,7 @@ describe('UnichainJS.transactionBuilder', function () {
             }, accounts.hex[6]);
             await broadcaster(null, accounts.pks[6], transaction);
             while (true) {
-                const tx = await unichainJS.unx.getTransactionInfo(transaction.txID);
+                const tx = await unichainJS.api.getTransactionInfo(transaction.txID);
                 if (Object.keys(tx).length === 0) {
                     await wait(3);
                     continue;
@@ -1436,7 +1436,7 @@ describe('UnichainJS.transactionBuilder', function () {
                 const transaction = await unichainJS.transactionBuilder.createToken(options, accounts.hex[i]);
                 await broadcaster(null, accounts.pks[i], transaction);
                 await waitChainData('token', accounts.hex[i]);
-                const token = await unichainJS.unx.getTokensIssuedByAddress(accounts.hex[i]);
+                const token = await unichainJS.api.getTokensIssuedByAddress(accounts.hex[i]);
                 await waitChainData('tokenById', token[Object.keys(token)[0]]['id']);
                 await broadcaster(null, accounts.pks[i], await unichainJS.transactionBuilder.sendToken(
                     accounts.hex[toIdx1],
@@ -1479,18 +1479,6 @@ describe('UnichainJS.transactionBuilder', function () {
 
     });
 
-    describe("#createUNXExchange", async function () {
-    });
-
-    describe("#injectExchangeTokens", async function () {
-    });
-
-    describe("#withdrawExchangeTokens", async function () {
-    });
-
-    describe("#tradeExchangeTokens", async function () {
-    });
-
     describe("Alter existent transactions", async function () {
 
         describe("#extendExpiration", async function () {
@@ -1500,15 +1488,15 @@ describe('UnichainJS.transactionBuilder', function () {
                 const receiver = accounts.b58[42]
                 const sender = accounts.hex[43]
                 const privateKey = accounts.pks[43]
-                const balance = await unichainJS.unx.getUnconfirmedBalance(sender);
+                const balance = await unichainJS.api.getUnconfirmedBalance(sender);
 
-                let transaction = await unichainJS.transactionBuilder.sendUnx(receiver, 10, sender);
+                let transaction = await unichainJS.transactionBuilder.sendUnw(receiver, 10, sender);
                 const previousId = transaction.txID;
                 transaction = await unichainJS.transactionBuilder.extendExpiration(transaction, 3600);
                 await broadcaster(null, privateKey, transaction);
 
                 assert.notEqual(transaction.txID, previousId)
-                assert.equal(balance - await unichainJS.unx.getUnconfirmedBalance(sender), 10);
+                assert.equal(balance - await unichainJS.api.getUnconfirmedBalance(sender), 10);
 
             });
 
@@ -1523,16 +1511,16 @@ describe('UnichainJS.transactionBuilder', function () {
                 const receiver = accounts.b58[44]
                 const sender = accounts.hex[45]
                 const privateKey = accounts.pks[45]
-                const balance = await unichainJS.unx.getUnconfirmedBalance(sender);
+                const balance = await unichainJS.api.getUnconfirmedBalance(sender);
 
-                let transaction = await unichainJS.transactionBuilder.sendUnx(receiver, 10, sender);
+                let transaction = await unichainJS.transactionBuilder.sendUnw(receiver, 10, sender);
                 const data = "Sending money to Bill.";
                 transaction = await unichainJS.transactionBuilder.addUpdateData(transaction, data);
                 const id = transaction.txID;
                 await broadcaster(null, privateKey, transaction);
                 await waitChainData('tx', id);
-                assert.equal(balance - await unichainJS.unx.getUnconfirmedBalance(sender), 10);
-                const unconfirmedTx = await unichainJS.unx.getTransaction(id)
+                assert.equal(balance - await unichainJS.api.getUnconfirmedBalance(sender), 10);
+                const unconfirmedTx = await unichainJS.api.getTransaction(id)
                 assert.equal(unichainJS.toUtf8(unconfirmedTx.raw_data.data), data);
 
             });
@@ -1550,9 +1538,9 @@ describe('UnichainJS.transactionBuilder', function () {
                 const receiver = accounts.b58[40]
                 const sender = accounts.hex[41]
                 const privateKey = accounts.pks[41]
-                // const balance = await unichainJS.unx.getUnconfirmedBalance(sender);
+                // const balance = await unichainJS.api.getUnconfirmedBalance(sender);
 
-                let transaction = await unichainJS.transactionBuilder.sendUnx(receiver, 10, sender);
+                let transaction = await unichainJS.transactionBuilder.sendUnw(receiver, 10, sender);
                 const previousId = transaction.txID;
                 const data = "Sending money to Bill.";
                 transaction = await unichainJS.transactionBuilder.alterTransaction(transaction, {data});
@@ -1560,7 +1548,7 @@ describe('UnichainJS.transactionBuilder', function () {
                 assert.notEqual(id, previousId)
                 await broadcaster(null, privateKey, transaction);
                 await waitChainData('tx', id);
-                const unconfirmedTx = await unichainJS.unx.getTransaction(id)
+                const unconfirmedTx = await unichainJS.api.getTransaction(id)
                 assert.equal(unichainJS.toUtf8(unconfirmedTx.raw_data.data), data);
 
             });

@@ -172,8 +172,8 @@ export default class Contract {
         try {
             const address = this.unichainJS.address.fromPrivateKey(privateKey);
             const transaction = await this.unichainJS.transactionBuilder.createSmartContract(options, address);
-            const signedTransaction = await this.unichainJS.unx.sign(transaction, privateKey);
-            const contract = await this.unichainJS.unx.sendRawTransaction(signedTransaction);
+            const signedTransaction = await this.unichainJS.api.sign(transaction, privateKey);
+            const contract = await this.unichainJS.api.sendRawTransaction(signedTransaction);
 
             if (contract.code)
                 return callback({
@@ -193,7 +193,7 @@ export default class Contract {
             return this.injectPromise(this.at, contractAddress);
 
         try {
-            const contract = await this.unichainJS.unx.getContract(contractAddress);
+            const contract = await this.unichainJS.api.getContract(contractAddress);
 
             if (!contract.contract_address)
                 return callback('Unknown error: ' + JSON.stringify(contract, null, 2));

@@ -41,7 +41,7 @@ export default class TransactionBuilder {
         this.validator = new Validator(unichainJS);
     }
 
-    sendUnx(to = false, amount = 0, from = this.unichainJS.defaultAddress.hex, options, callback = false) {
+    sendUnw(to = false, amount = 0, from = this.unichainJS.defaultAddress.hex, expiredTime = 0, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
@@ -56,7 +56,7 @@ export default class TransactionBuilder {
         }
 
         if (!callback)
-            return this.injectPromise(this.sendUnx, to, amount, from, options);
+            return this.injectPromise(this.sendUnw, to, amount, from, expiredTime, options);
 
         // accept amounts passed as strings
         amount = parseInt(amount)
@@ -75,18 +75,25 @@ export default class TransactionBuilder {
             {
                 names: ['recipient', 'origin'],
                 type: 'notEqual',
-                msg: 'Cannot transfer UNX to the same account'
+                msg: 'Cannot transfer UNW to the same account'
             },
             {
                 name: 'amount',
                 type: 'integer',
                 gt: 0,
                 value: amount
+            },
+            {
+                name: 'expired_time',
+                type: 'integer',
+                value: expiredTime
             }
         ], callback))
             return;
 
-        const data = {
+        const isFuture = expiredTime > 0;
+       
+        let data = {
             to_address: toHex(to),
             owner_address: toHex(from),
             amount: amount,
@@ -95,8 +102,12 @@ export default class TransactionBuilder {
         if (options && options.permissionId) {
             data.Permission_id = options.permissionId;
         }
-
-        this.unichainJS.fullNode.request('wallet/createtransaction', data, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+        let apiPath = 'wallet/createtransaction'
+        if (isFuture) {
+            data.expire_time = expiredTime
+            apiPath = 'wallet/createfuturetransaction'
+        }
+        this.unichainJS.fullNode.request(apiPath, data, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
     sendToken(to = false, amount = 0, tokenID = false, from = this.unichainJS.defaultAddress.hex, options, callback = false) {
@@ -412,7 +423,7 @@ export default class TransactionBuilder {
         this.unichainJS.fullNode.request('wallet/withdrawbalance', data, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
-    applyForSR(
+    applyForWitness(
         address = this.unichainJS.defaultAddress.hex,
         url = false,
         options,
@@ -430,7 +441,7 @@ export default class TransactionBuilder {
         }
 
         if (!callback)
-            return this.injectPromise(this.applyForSR, address, url, options);
+            return this.injectPromise(this.applyForWitness, address, url, options);
 
         if (this.validator.notValid([
             {
@@ -494,28 +505,28 @@ export default class TransactionBuilder {
 
         let invalid = false;
 
-        votes = Object.entries(votes).map(([srAddress, voteCount]) => {
+        votes = Object.entries(votes).map(([witnessAddress, voteCount]) => {
             if (invalid)
                 return;
 
             if (this.validator.notValid([
                 {
-                    name: 'SR',
+                    name: 'Witness',
                     type: 'address',
-                    value: srAddress
+                    value: witnessAddress
                 },
                 {
                     name: 'vote count',
                     type: 'integer',
                     gt: 0,
                     value: voteCount,
-                    msg: 'Invalid vote count provided for SR: ' + srAddress
+                    msg: 'Invalid vote count provided for Witness: ' + witnessAddress
                 }
             ]))
                 return invalid = true;
 
             return {
-                vote_address: toHex(srAddress),
+                vote_address: toHex(witnessAddress),
                 vote_count: parseInt(voteCount)
             };
         });
@@ -695,7 +706,7 @@ export default class TransactionBuilder {
             name
         };
 
-        // tokenValue and tokenId can cause errors if provided when the unx10 proposal has not been approved yet. So we set them only if they are passed to the method.
+        // tokenValue and tokenId can cause errors if provided when the  proposal has not been approved yet. So we set them only if they are passed to the method.
         if (utils.isNotNullOrUndefined(tokenValue))
             args.call_token_value = parseInt(tokenValue)
         if (utils.isNotNullOrUndefined(tokenId))
@@ -841,14 +852,6 @@ export default class TransactionBuilder {
             }
 
             try {
-                // workaround for unsupported trcToken type
-                types = types.map(type => {
-                    if (/trcToken/.test(type)) {
-                        type = type.replace(/trcToken/, 'uint256')
-                    }
-                    return type
-                })
-
                 parameters = abiCoder.encode(types, values).replace(/^(0x)/, '');
             } catch (ex) {
                 return callback(ex);
@@ -893,8 +896,8 @@ export default class TransactionBuilder {
             owner_address: toHex(ownerAddress)
         };
 
-        if (this.unichainJS.unx.cache.contracts[contractAddress]) {
-            delete this.unichainJS.unx.cache.contracts[contractAddress]
+        if (this.unichainJS.api.cache.contracts[contractAddress]) {
+            delete this.unichainJS.api.cache.contracts[contractAddress]
         }
         this.unichainJS.fullNode.request('wallet/clearabi', data, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
 
@@ -937,8 +940,8 @@ export default class TransactionBuilder {
             description = false,
             url = false,
             totalSupply = 0,
-            unxRatio = 1, // How much UNX will `tokenRatio` cost?
-            tokenRatio = 1, // How many tokens will `unxRatio` afford?
+            unxRatio = 1, // How much UNW will `tokenRatio` cost?
+            tokenRatio = 1, // How many tokens will `unwRatio` afford?
             saleStart = Date.now(),
             saleEnd = false,
             freeBandwidth = 0, // The creator's "donated" bandwidth for use by token holders
@@ -957,7 +960,7 @@ export default class TransactionBuilder {
                 value: totalSupply
             },
             {
-                name: 'UNX ratio',
+                name: 'UNW ratio',
                 type: 'positive-integer',
                 value: unxRatio
             },
@@ -1238,7 +1241,7 @@ export default class TransactionBuilder {
 
     /**
      * Creates a proposal to modify the network.
-     * Can only be created by a current Super Representative.
+     * Can only be created by a current Witness.
      */
     createProposal(parameters = false, issuerAddress = this.unichainJS.defaultAddress.hex, options, callback = false) {
         if (utils.isFunction(options)) {
@@ -1293,7 +1296,7 @@ export default class TransactionBuilder {
 
     /**
      * Deletes a network modification proposal that the owner issued.
-     * Only current Super Representative can vote on a proposal.
+     * Only current Witness can vote on a proposal.
      */
     deleteProposal(proposalID = false, issuerAddress = this.unichainJS.defaultAddress.hex, options, callback = false) {
         if (utils.isFunction(options)) {
@@ -1341,7 +1344,7 @@ export default class TransactionBuilder {
 
     /**
      * Adds a vote to an issued network modification proposal.
-     * Only current Super Representative can vote on a proposal.
+     * Only current Witness can vote on a proposal.
      */
     voteProposal(proposalID = false, isApproval = false, voterAddress = this.unichainJS.defaultAddress.hex, options, callback = false) {
         if (utils.isFunction(options)) {
@@ -1398,7 +1401,7 @@ export default class TransactionBuilder {
      * Token Name should be a CASE SENSITIVE string.
      * PLEASE VERIFY THIS ON Unichain Explorer.
      */
-    createUNXExchange(tokenName, tokenBalance, unxBalance, ownerAddress = this.unichainJS.defaultAddress.hex, options, callback = false) {
+    createUNWExchange(tokenName, tokenBalance, unwBalance, ownerAddress = this.unichainJS.defaultAddress.hex, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
@@ -1413,7 +1416,7 @@ export default class TransactionBuilder {
         }
 
         if (!callback)
-            return this.injectPromise(this.createUNXExchange, tokenName, tokenBalance, unxBalance, ownerAddress, options);
+            return this.injectPromise(this.createUNWExchange, tokenName, tokenBalance, unwBalance, ownerAddress, options);
 
         if (this.validator.notValid([
             {
@@ -1432,9 +1435,9 @@ export default class TransactionBuilder {
                 value: tokenBalance
             },
             {
-                name: 'unx balance',
+                name: 'unw balance',
                 type: 'positive-integer',
-                value: unxBalance
+                value: unwBalance
             }
         ], callback))
             return;
@@ -1443,8 +1446,8 @@ export default class TransactionBuilder {
             owner_address: toHex(ownerAddress),
             first_token_id: fromUtf8(tokenName),
             first_token_balance: tokenBalance,
-            second_token_id: '5f', // Constant for UNX.
-            second_token_balance: unxBalance
+            second_token_id: '5f', // Constant for UNW.
+            second_token_balance: unwBalance
         };
 
         if (options && options.permissionId) {
@@ -1528,7 +1531,7 @@ export default class TransactionBuilder {
     /**
      * Adds tokens into a bancor style exchange.
      * Will add both tokens at market rate.
-     * Use "_" for the constant value for UNX.
+     * Use "_" for the constant value for UNW.
      */
     injectExchangeTokens(exchangeID = false, tokenName = false, tokenAmount = 0, ownerAddress = this.unichainJS.defaultAddress.hex, options, callback = false) {
         if (utils.isFunction(options)) {
@@ -1590,7 +1593,7 @@ export default class TransactionBuilder {
     /**
      * Withdraws tokens from a bancor style exchange.
      * Will withdraw at market rate both tokens.
-     * Use "_" for the constant value for UNX.
+     * Use "_" for the constant value for UNW.
      */
     withdrawExchangeTokens(exchangeID = false, tokenName = false, tokenAmount = 0, ownerAddress = this.unichainJS.defaultAddress.hex, options, callback = false) {
         if (utils.isFunction(options)) {
@@ -1652,7 +1655,7 @@ export default class TransactionBuilder {
     /**
      * Trade tokens on a bancor style exchange.
      * Expected value is a validation and used to cap the total amt of token 2 spent.
-     * Use "_" for the constant value for UNX.
+     * Use "_" for the constant value for UNW.
      */
     tradeExchangeTokens(exchangeID = false,
                         tokenName = false,

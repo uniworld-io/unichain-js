@@ -32,7 +32,7 @@ class GetNowBlock {
         return {
             requires: '^2.2.4',
             components: {
-                unx: {
+                unw: {
                     // will be overridden
                     getCurrentBlock: this.someMethod,
 

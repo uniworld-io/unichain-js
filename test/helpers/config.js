@@ -36,7 +36,7 @@ module.exports = {
         }
     },
     isProposalApproved: async (unichainJS, proposal) => {
-        let chainParameters = await unichainJS.unx.getChainParameters()
+        let chainParameters = await unichainJS.api.getChainParameters()
         for(let param of chainParameters) {
             if(param.key === proposal) {
                 return param.value

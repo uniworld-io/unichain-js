@@ -5,14 +5,14 @@ import {ADDRESS_PREFIX} from 'utils/address';
 import Validator from "../paramValidator";
 import injectpromise from 'injectpromise';
 
-const UNX_MESSAGE_HEADER = '\x19UNICHAIN Signed Message:\n32';
+const UNW_MESSAGE_HEADER = '\x19UNICHAIN Signed Message:\n32';
 const ETH_MESSAGE_HEADER = '\x19Ethereum Signed Message:\n32';
 
 function toHex(value) {
     return UnichainJS.address.toHex(value);
 }
 
-export default class Unx {
+export default class Api {
     constructor(unichainJS = false) {
         if (!unichainJS || !unichainJS instanceof UnichainJS)
             throw new Error('Expected instance of UnichainJS');
@@ -523,9 +523,9 @@ export default class Unx {
         }).catch(err => callback(err));
     }
 
-    listSuperRepresentatives(callback = false) {
+    listWitnesses(callback = false) {
         if (!callback)
-            return this.injectPromise(this.listSuperRepresentatives);
+            return this.injectPromise(this.listWitnesses);
 
         this.unichainJS.fullNode.request('wallet/listwitnesses').then(({witnesses = []}) => {
             callback(null, witnesses);
@@ -620,7 +620,7 @@ export default class Unx {
         if (!utils.isHex(message))
             return callback('Expected hex message input');
 
-        if (Unx.verifySignature(message, address, signature, useUnichainHeader))
+        if (Api.verifySignature(message, address, signature, useUnichainHeader))
             return callback(null, true);
 
         callback('Signature does not match');
@@ -630,7 +630,7 @@ export default class Unx {
         message = message.replace(/^0x/, '');
         signature = signature.replace(/^0x/, '');
         const messageBytes = [
-            ...toUtf8Bytes(useUnichainHeader ? UNX_MESSAGE_HEADER : ETH_MESSAGE_HEADER),
+            ...toUtf8Bytes(useUnichainHeader ? UNW_MESSAGE_HEADER : ETH_MESSAGE_HEADER),
             ...utils.code.hexStr2byteArray(message)
         ];
 
@@ -678,7 +678,7 @@ export default class Unx {
                 return callback('Expected hex message input');
 
             try {
-                const signatureHex = Unx.signString(transaction, privateKey, useUnichainHeader)
+                const signatureHex = Api.signString(transaction, privateKey, useUnichainHeader)
                 return callback(null, signatureHex);
             } catch (ex) {
                 callback(ex);
@@ -712,7 +712,7 @@ export default class Unx {
         message = message.replace(/^0x/, '');
         const signingKey = new SigningKey(privateKey);
         const messageBytes = [
-            ...toUtf8Bytes(useUnichainHeader ? UNX_MESSAGE_HEADER : ETH_MESSAGE_HEADER),
+            ...toUtf8Bytes(useUnichainHeader ? UNW_MESSAGE_HEADER : ETH_MESSAGE_HEADER),
             ...utils.code.hexStr2byteArray(message)
         ];
 
@@ -900,7 +900,7 @@ export default class Unx {
 
         try {
             const address = options.privateKey ? this.unichainJS.address.fromPrivateKey(options.privateKey) : options.address;
-            const transaction = await this.unichainJS.transactionBuilder.sendUnx(to, amount, address);
+            const transaction = await this.unichainJS.transactionBuilder.sendUnw(to, amount, address);
             const signedTransaction = await this.sign(transaction, options.privateKey || undefined);
             const result = await this.sendRawTransaction(signedTransaction);
 
@@ -956,11 +956,11 @@ export default class Unx {
     }
 
     /**
-     * Freezes an amount of UNX.
+     * Freezes an amount of UNW.
      * Will give bandwidth OR Energy and UNICHAIN Power(voting rights)
      * to the owner of the frozen tokens.
      *
-     * @param amount - is the number of frozen unx
+     * @param amount - is the number of frozen unw
      * @param duration - is the duration in days to be frozen
      * @param resource - is the type, must be either "ENERGY" or "BANDWIDTH"
      * @param options
@@ -1023,7 +1023,7 @@ export default class Unx {
     }
 
     /**
-     * Unfreeze UNX that has passed the minimum freeze duration.
+     * Unfreeze UNW that has passed the minimum freeze duration.
      * Unfreezing will remove bandwidth and UNICHAIN Power.
      *
      * @param resource - is the type, must be either "ENERGY" or "BANDWIDTH"
@@ -1136,7 +1136,7 @@ export default class Unx {
         return this.sendTransaction(...args);
     }
 
-    sendUnx(...args) {
+    sendUnw(...args) {
         return this.sendTransaction(...args);
     }
 

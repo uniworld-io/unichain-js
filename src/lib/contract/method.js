@@ -198,7 +198,7 @@ export default class Method {
                 return callback('Unknown error: ' + JSON.stringify(transaction, null, 2));
 
             // If privateKey is false, this won't be signed here. We assume sign functionality will be replaced.
-            const signedTransaction = await this.unichainJS.unx.sign(transaction.transaction, privateKey);
+            const signedTransaction = await this.unichainJS.api.sign(transaction.transaction, privateKey);
 
             if (!signedTransaction.signature) {
                 if (!privateKey)
@@ -207,7 +207,7 @@ export default class Method {
                 return callback('Invalid private key provided');
             }
 
-            const broadcast = await this.unichainJS.unx.sendRawTransaction(signedTransaction);
+            const broadcast = await this.unichainJS.api.sendRawTransaction(signedTransaction);
 
             if (broadcast.code) {
                 const err = {
@@ -230,7 +230,7 @@ export default class Method {
                     });
                 }
 
-                const output = await this.unichainJS.unx.getTransactionInfo(signedTransaction.txID);
+                const output = await this.unichainJS.api.getTransactionInfo(signedTransaction.txID);
 
                 if (!Object.keys(output).length) {
                     return setTimeout(() => {

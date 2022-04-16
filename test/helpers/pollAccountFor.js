@@ -10,7 +10,7 @@ module.exports = async function pollAccountFor(address, property, value = false,
             throw new Error('Timeout...');
         }
         wait(interval);
-        let result = await unichainJS.unx.getAccount(address);
+        let result = await unichainJS.api.getAccount(address);
         if(typeof property === 'string') {
             let data = _.get(result, property)
             if(data) {

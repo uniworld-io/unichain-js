@@ -16,59 +16,59 @@ module.exports = async function (type, ...params) {
         try {
             switch (type) {
                 case 'tx': {
-                    data = await unichainJS.unx.getTransaction(params[0]);
+                    data = await unichainJS.api.getTransaction(params[0]);
                     isFound = !!data.txID;
                     break;
                 }
                 case 'account': {
-                    data = await unichainJS.unx.getUnconfirmedAccount(params[0]);
+                    data = await unichainJS.api.getUnconfirmedAccount(params[0]);
                     isFound = !!data.address;
                     break;
                 }
                 case 'accountById': {
-                    data = await unichainJS.unx.getUnconfirmedAccountById(params[0]);
+                    data = await unichainJS.api.getUnconfirmedAccountById(params[0]);
                     isFound = !!data.address;
                     break;
                 }
                 case 'token': {
-                    data = await unichainJS.unx.getTokensIssuedByAddress(params[0]);
+                    data = await unichainJS.api.getTokensIssuedByAddress(params[0]);
                     isFound = !!Object.keys(data).length;
                     break;
                 }
                 case 'tokenById': {
-                    data = await unichainJS.unx.getTokenFromID(params[0]);
+                    data = await unichainJS.api.getTokenFromID(params[0]);
                     isFound = !!data.name;
                     break;
                 }
                 case 'sendToken': {
-                    data = await unichainJS.unx.getUnconfirmedAccount(params[0]);
+                    data = await unichainJS.api.getUnconfirmedAccount(params[0]);
                     isFound = data && data.assetV2 && data.assetV2.length && data.assetV2[0].value !== params[1];
                     break;
                 }
                 case 'balance': {
-                    data = await unichainJS.unx.getUnconfirmedBalance(params[0]);
+                    data = await unichainJS.api.getUnconfirmedBalance(params[0]);
                     isFound = (data !== params[1]);
                     break;
                 }
                 case 'freezeBp': {
-                    data = await unichainJS.unx.getUnconfirmedAccount(params[0]);
+                    data = await unichainJS.api.getUnconfirmedAccount(params[0]);
                     isFound = data.frozen && (data.frozen[0].frozen_balance !== params[1]);
                     break;
                 }
                 case 'freezeEnergy': {
-                    data = await unichainJS.unx.getUnconfirmedAccount(params[0]);
+                    data = await unichainJS.api.getUnconfirmedAccount(params[0]);
                     isFound = data.account_resource &&
                         data.account_resource.frozen_balance_for_energy &&
                         (data.account_resource.frozen_balance_for_energy.frozen_balance !== params[1]);
                     break;
                 }
                 case 'contract': {
-                    data = await unichainJS.unx.getContract(params[0]);
+                    data = await unichainJS.api.getContract(params[0]);
                     isFound = !!data.contract_address;
                     break;
                 }
                 case 'exchange': {
-                    data = await unichainJS.unx.getExchangeByID(params[0]);
+                    data = await unichainJS.api.getExchangeByID(params[0]);
                     isFound = !!data.exchange_id;
                     break;
                 }

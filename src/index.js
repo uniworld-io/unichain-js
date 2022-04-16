@@ -7,20 +7,20 @@ import semver from 'semver';
 import injectpromise from 'injectpromise';
 
 import TransactionBuilder from 'lib/transactionBuilder';
-import Unx from 'lib/unx';
+import Api from 'lib/api';
 import Contract from 'lib/contract';
 import Plugin from 'lib/plugin';
 import Event from 'lib/event';
 import {keccak256} from 'utils/ethersUtils';
 import {ADDRESS_PREFIX} from 'utils/address';
 
-const DEFAULT_VERSION = '3.5.0';
+const DEFAULT_VERSION = '1.0.1';
 
 export default class UnichainJS extends EventEmitter {
     static providers = providers;
     static BigNumber = BigNumber;
     static TransactionBuilder = TransactionBuilder;
-    static Unx = Unx;
+    static Api = Api;
     static Contract = Contract;
     static Plugin = Plugin;
     static Event = Event;
@@ -53,7 +53,8 @@ export default class UnichainJS extends EventEmitter {
 
         this.event = new Event(this);
         this.transactionBuilder = new TransactionBuilder(this);
-        this.unx = new Unx(this);
+        this.api = new Api(this);
+        this.unx = this.api; //for compatible 
         this.plugin = new Plugin(this, options);
         this.utils = utils;
 
@@ -74,7 +75,7 @@ export default class UnichainJS extends EventEmitter {
         [
             'sha3', 'toHex', 'toUtf8', 'fromUtf8',
             'toAscii', 'fromAscii', 'toDecimal', 'fromDecimal',
-            'toSun', 'fromSun', 'toBigNumber', 'isAddress',
+            'toGinza', 'fromGinza', 'toBigNumber', 'isAddress',
             'createAccount', 'address', 'version'
         ].forEach(key => {
             this[key] = UnichainJS[key];
@@ -89,7 +90,7 @@ export default class UnichainJS extends EventEmitter {
 
     async getFullnodeVersion() {
         try {
-            const nodeInfo = await this.unx.getNodeInfo()
+            const nodeInfo = await this.api.getNodeInfo()
             this.fullnodeVersion = nodeInfo.configNodeInfo.codeVersion
             if (this.fullnodeVersion.split('.').length === 2) {
                 this.fullnodeVersion += '.0';
@@ -337,14 +338,14 @@ export default class UnichainJS extends EventEmitter {
         return number.isLessThan(0) ? '-0x' + result.substr(1) : '0x' + result;
     }
 
-    static fromSun(sun) {
-        const unx = UnichainJS.toBigNumber(sun).div(1_000_000);
-        return utils.isBigNumber(sun) ? unx : unx.toString(10);
+    static fromGinza(ginza) {
+        const unw = UnichainJS.toBigNumber(ginza).div(1_000_000);
+        return utils.isBigNumber(ginza) ? unw : unw.toString(10);
     }
 
-    static toSun(unx) {
-        const sun = UnichainJS.toBigNumber(unx).times(1_000_000);
-        return utils.isBigNumber(unx) ? sun : sun.toString(10);
+    static toGinza(unw) {
+        const ginza = UnichainJS.toBigNumber(unw).times(1_000_000);
+        return utils.isBigNumber(unw) ? ginza : ginza.toString(10);
     }
 
     static toBigNumber(amount = 0) {

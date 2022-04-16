@@ -5,11 +5,11 @@ module.exports = async function (func, pk, transaction) {
     if( !transaction) {
         transaction = await func;
     }
-    const signedTransaction = await unichainJS.unx.sign(transaction, pk);
+    const signedTransaction = await unichainJS.api.sign(transaction, pk);
     const result = {
         transaction,
         signedTransaction,
-        receipt: await unichainJS.unx.sendRawTransaction(signedTransaction)
+        receipt: await unichainJS.api.sendRawTransaction(signedTransaction)
     };
     return Promise.resolve(result);
 }

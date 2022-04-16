@@ -26,7 +26,7 @@ describe('UnichainJS.lib.plugin', async function () {
 
     });
 
-    describe("#plug GetNowBlock into unichainJS.unx", async function () {
+    describe("#plug GetNowBlock into unichainJS.api", async function () {
 
         it('should register the plugin GetNowBlock', async function () {
 
@@ -39,12 +39,12 @@ describe('UnichainJS.lib.plugin', async function () {
             assert.isTrue(result.plugged.includes('getCurrentBlock'))
             assert.isTrue(result.plugged.includes('getLatestBlock'))
 
-            result = await unichainJS.unx.getCurrentBlock()
+            result = await unichainJS.api.getCurrentBlock()
             assert.isTrue(result.fromPlugin)
             assert.equal(result.blockID.length, 64)
             assert.isTrue(/^00000/.test(result.blockID))
 
-            result = await unichainJS.unx.getSomeParameter()
+            result = await unichainJS.api.getSomeParameter()
             assert.equal(result, someParameter)
 
         })
