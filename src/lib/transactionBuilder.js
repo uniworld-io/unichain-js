@@ -1073,6 +1073,149 @@ export default class TransactionBuilder {
         this.unichainJS.fullNode.request('wallet/createassetissue', data, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
+    createURC30Token(options = {}, issuerAddress = this.unichainJS.defaultAddress.hex, callback = false) {
+        if (utils.isFunction(issuerAddress)) {
+            callback = issuerAddress;
+            issuerAddress = this.unichainJS.defaultAddress.hex;
+        }
+
+        if (!callback)
+            return this.injectPromise(this.createURC30Token, options, issuerAddress);
+
+        const {
+            name,
+            abbr,
+            max_supply,
+            total_supply,
+            start_time,
+            end_time,
+            description,
+            url,
+            fee,
+            extra_fee_rate,
+            create_acc_fee,
+            fee_pool,
+            lot,
+            exch_unx_num,
+            exch_num,
+            owner_address
+        } = options;
+
+        if (this.validator.notValid([
+            {
+                name: 'token name',
+                type: 'not-empty-string',
+                value: name
+            },
+            {
+                name: 'token abbr',
+                type: 'not-empty-string',
+                value: abbr
+            },
+            {
+                name: 'Init amount',
+                type: 'positive-integer',
+                value: total_supply
+            },
+            {
+                name: 'Max amount',
+                type: 'positive-integer',
+                value: max_supply
+            },
+            {
+                name: 'UNW exchange ratio',
+                type: 'positive-integer',
+                value: exch_unx_num
+            },
+            {
+                name: 'Token ratio',
+                type: 'positive-integer',
+                value: exch_num
+            },
+            {
+                name: 'token description',
+                type: 'not-empty-string',
+                value: description
+            },
+            {
+                name: 'token url',
+                type: 'url',
+                value: url
+            },
+            {
+                name: 'address',
+                type: 'address',
+                value: owner_address
+            },
+            {
+                name: 'Start time',
+                type: 'integer',
+                value: start_time,
+                gte: Date.now()
+            },
+            {
+                name: 'End time',
+                type: 'integer',
+                value: end_time,
+                gt: start_time
+            },
+            {
+                name: 'Fee',
+                type: 'integer',
+                value: fee
+            },
+            {
+                name: 'Extra fee rate in %',
+                type: 'integer',
+                value: extra_fee_rate,
+                lt: 100
+            },
+            {
+                name: 'Fee pool',
+                type: 'integer',
+                value: fee_pool,
+                gte: 10000000
+            },
+            {
+                name: 'Lot',
+                type: 'integer',
+                value: lot
+            },
+            {
+                name: 'Create account fee',
+                type: 'integer',
+                value: create_acc_fee
+            },
+        ], callback))
+            return;
+
+        const data = {
+            owner_address: toHex(owner_address),
+            name: name,
+            abbr: abbr,
+            description: description,
+            url: url,
+            total_supply: parseInt(total_supply),
+            max_supply: parseInt(max_supply),
+            exch_unx_num: parseInt(exch_unx_num),
+            exch_num: parseInt(exch_num),
+            start_time: parseInt(start_time),
+            end_time: parseInt(end_time),
+            fee: parseInt(fee),
+            extra_fee_rate: parseInt(extra_fee_rate),
+            create_acc_fee: parseInt(create_acc_fee),
+            fee_pool: parseInt(fee_pool),
+            lot: parseInt(lot)
+
+        }
+        
+        if (options && options.permissionId) {
+            data.Permission_id = options.permissionId;
+        }
+
+        this.unichainJS.fullNode.request('wallet/createtoken', data, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
     updateAccount(accountName = false, address = this.unichainJS.defaultAddress.hex, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
