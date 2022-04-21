@@ -1216,6 +1216,77 @@ export default class TransactionBuilder {
         this.unichainJS.fullNode.request('wallet/createtoken', data, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
+    sendURC30Token(to = false, amount = 0, tokenName = false, availableTime = 0, from = this.unichainJS.defaultAddress.hex, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (utils.isFunction(from)) {
+            callback = from;
+            from = this.unichainJS.defaultAddress.hex;
+        } else if (utils.isObject(from)) {
+            options = from;
+            from = this.unichainJS.defaultAddress.hex;
+        }
+
+        if (!callback)
+            return this.injectPromise(this.sendURC30Token, to, amount, tokenName, availableTime, from, options);
+
+        amount = parseInt(amount)
+        if (this.validator.notValid([
+            {
+                name: 'recipient',
+                type: 'address',
+                value: to
+            },
+            {
+                name: 'origin',
+                type: 'address',
+                value: from,
+            },
+            {
+                names: ['recipient', 'origin'],
+                type: 'notEqual',
+                msg: 'Cannot transfer tokens to the same account'
+            },
+            {
+                name: 'amount',
+                type: 'integer',
+                gt: 0,
+                value: amount
+            },
+            {
+                name: 'available time',
+                type: 'integer',
+                value: availableTime
+            },
+            {
+                name: 'token name (id)',
+                type: 'not-empty-string',
+                value: tokenName
+            }
+        ], callback))
+            return;
+
+        const data = {
+            to_address: toHex(to),
+            owner_address: toHex(from),
+            token_name: tokenName,
+            amount: parseInt(amount)
+        };
+
+        if (availableTime) {
+            data.available_time = availableTime;
+        }
+
+        if (options && options.permissionId) {
+            data.Permission_id = options.permissionId;
+        }
+
+        this.unichainJS.fullNode.request('wallet/transfertoken', data, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
     updateAccount(accountName = false, address = this.unichainJS.defaultAddress.hex, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
