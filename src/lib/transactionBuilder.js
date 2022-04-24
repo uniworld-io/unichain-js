@@ -41,7 +41,7 @@ export default class TransactionBuilder {
         this.validator = new Validator(unichainJS);
     }
 
-    sendUnw(to = false, amount = 0, from = this.unichainJS.defaultAddress.hex, expiredTime = 0, options, callback = false) {
+    sendUnw(to = false, amount = 0, expiredTime = 0, from = this.unichainJS.defaultAddress.hex, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
@@ -1216,24 +1216,15 @@ export default class TransactionBuilder {
         this.unichainJS.fullNode.request('wallet/createtoken', data, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
-    sendURC30Token(to = false, amount = 0, tokenName = false, availableTime = 0, from = this.unichainJS.defaultAddress.hex, options, callback = false) {
-        if (utils.isFunction(options)) {
-            callback = options;
-            options = {};
-        }
-
+    sendURC30Token(to = false, amount = 0, tokenName = false, availableTime = 0, from = this.unichainJS.defaultAddress.hex, callback = false) {
         if (utils.isFunction(from)) {
             callback = from;
             from = this.unichainJS.defaultAddress.hex;
-        } else if (utils.isObject(from)) {
-            options = from;
-            from = this.unichainJS.defaultAddress.hex;
-        }
+        } 
 
         if (!callback)
-            return this.injectPromise(this.sendURC30Token, to, amount, tokenName, availableTime, from, options);
+            return this.injectPromise(this.sendURC30Token, to, amount, tokenName, availableTime, from);
 
-        amount = parseInt(amount)
         if (this.validator.notValid([
             {
                 name: 'recipient',
@@ -1280,11 +1271,195 @@ export default class TransactionBuilder {
             data.available_time = availableTime;
         }
 
-        if (options && options.permissionId) {
-            data.Permission_id = options.permissionId;
+        this.unichainJS.fullNode.request('wallet/transfertoken', data, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    contributeTokenFee(tokenName, amount, from = this.unichainJS.defaultAddress.hex, callback = false) {
+        if (utils.isFunction(from)) {
+            callback = from;
+            from = this.unichainJS.defaultAddress.hex;
         }
 
-        this.unichainJS.fullNode.request('wallet/transfertoken', data, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+        if (!callback)
+            return this.injectPromise(this.contributeTokenFee, tokenName, amount, from);
+
+        if (this.validator.notValid([
+            {
+                name: 'origin',
+                type: 'address',
+                value: from,
+            },
+            {
+                name: 'amount',
+                type: 'integer',
+                gt: 100000,
+                value: amount,
+                msg: 'min amount contribution is 0.1 UNW'
+            },
+            {
+                name: 'token name (id)',
+                type: 'not-empty-string',
+                value: tokenName
+            }
+        ], callback))
+            return;
+
+        const data = {
+            owner_address: toHex(from),
+            token_name: tokenName,
+            amount: parseInt(amount)
+        };
+
+        this.unichainJS.fullNode.request('wallet/contributetokenfee', data, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    mintToken(tokenName, amount, from = this.unichainJS.defaultAddress.hex, callback = false) {
+        if (utils.isFunction(from)) {
+            callback = from;
+            from = this.unichainJS.defaultAddress.hex;
+        }
+
+        if (!callback)
+            return this.injectPromise(this.mintToken, tokenName, amount, from);
+
+        if (this.validator.notValid([
+            {
+                name: 'origin',
+                type: 'address',
+                value: from,
+            },
+            {
+                name: 'amount',
+                type: 'integer',
+                gt: 0,
+                value: amount
+            },
+            {
+                name: 'token name (id)',
+                type: 'not-empty-string',
+                value: tokenName
+            }
+        ], callback))
+            return;
+
+        const data = {
+            owner_address: toHex(from),
+            token_name: tokenName,
+            amount: parseInt(amount)
+        };
+
+        this.unichainJS.fullNode.request('wallet/minetoken', data, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    burnToken(tokenName, amount, from = this.unichainJS.defaultAddress.hex, callback = false) {
+        if (utils.isFunction(from)) {
+            callback = from;
+            from = this.unichainJS.defaultAddress.hex;
+        }
+
+        if (!callback)
+            return this.injectPromise(this.burnToken, tokenName, amount, from);
+
+        if (this.validator.notValid([
+            {
+                name: 'origin',
+                type: 'address',
+                value: from,
+            },
+            {
+                name: 'amount',
+                type: 'integer',
+                gt: 0,
+                value: amount
+            },
+            {
+                name: 'token name (id)',
+                type: 'not-empty-string',
+                value: tokenName
+            }
+        ], callback))
+            return;
+
+        const data = {
+            owner_address: toHex(from),
+            token_name: tokenName,
+            amount: parseInt(amount)
+        };
+
+        this.unichainJS.fullNode.request('wallet/burntoken', data, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    withdrawFutureToken(tokenName, from = this.unichainJS.defaultAddress.hex, callback = false) {
+        if (utils.isFunction(from)) {
+            callback = from;
+            from = this.unichainJS.defaultAddress.hex;
+        }
+
+        if (!callback)
+            return this.injectPromise(this.withdrawFutureToken, tokenName, from);
+
+        if (this.validator.notValid([
+            {
+                name: 'origin',
+                type: 'address',
+                value: from,
+            },
+            {
+                name: 'token name (id)',
+                type: 'not-empty-string',
+                value: tokenName
+            }
+        ], callback))
+            return;
+
+        const data = {
+            owner_address: toHex(from),
+            token_name: tokenName
+        };
+
+        this.unichainJS.fullNode.request('wallet/withdrawfuturetoken', data, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    transferTokenOwner(tokenName, to, from = this.unichainJS.defaultAddress.hex, callback = false) {
+        if (utils.isFunction(from)) {
+            callback = from;
+            from = this.unichainJS.defaultAddress.hex;
+        }
+
+        if (!callback)
+            return this.injectPromise(this.transferTokenOwner, tokenName, to, from);
+
+        if (this.validator.notValid([
+            {
+                name: 'recipient',
+                type: 'address',
+                value: to
+            },
+            {
+                name: 'origin',
+                type: 'address',
+                value: from,
+            },
+            {
+                names: ['recipient', 'origin'],
+                type: 'notEqual',
+                msg: 'Cannot transfer ownership to the same account'
+            },
+            {
+                name: 'token name (id)',
+                type: 'not-empty-string',
+                value: tokenName
+            }
+        ], callback))
+            return;
+
+        const data = {
+            to_address: toHex(to),
+            owner_address: toHex(from),
+            token_name: tokenName
+        };
+
+        this.unichainJS.fullNode.request('wallet/transfertokenowner', data, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
     updateAccount(accountName = false, address = this.unichainJS.defaultAddress.hex, options, callback = false) {

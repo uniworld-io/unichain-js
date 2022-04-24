@@ -1412,4 +1412,48 @@ export default class Api {
             }).catch(err => callback(err));
     }
 
+    //URC30 APIs
+    getTokenPool (tokenName, pageSize = 10, index = 0, callback = false) {
+        if (!callback) 
+            return this.injectPromise(this.getTokenPool, tokenName, pageSize, index);
+        
+        const data = {
+            token_name: tokenName,
+            page_size: pageSize,
+            page_index: index
+        }
+        this.unichainJS.fullNode.request('wallet/gettokenpool', data, 'post').then(token => {
+            return callback(token)
+        }).catch(err => callback(err));
+    }
+    
+    getFutureToken (tokenName, ownerAddress, pageSize = 10, index = 0, callback = false) {
+        if (!callback) 
+            return this.injectPromise(this.getFutureToken, tokenName, ownerAddress, pageSize, index);
+        
+        const data = {
+            token_name: tokenName,
+            page_size: pageSize,
+            page_index: index,
+            owner_address: toHex(ownerAddress)
+        }
+        this.unichainJS.fullNode.request('wallet/getfuturetoken', data, 'post').then(token => {
+            return callback(token)
+        }).catch(err => callback(err));
+    }
+
+    getFutureTransfer (ownerAddress, pageSize = 10, index = 0, callback = false) {
+        if (!callback) 
+            return this.injectPromise(this.getFutureTransfer, ownerAddress, pageSize, index);
+        
+        const data = {
+            owner_address: toHex(ownerAddress),
+            page_size: pageSize,
+            page_index: index
+        }
+        this.unichainJS.fullNode.request('wallet/getfuturetransfer', data, 'post').then(token => {
+            return callback(token)
+        }).catch(err => callback(err));
+    }
+
 };

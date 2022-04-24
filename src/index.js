@@ -35,7 +35,7 @@ export default class UnichainJS extends EventEmitter {
         let fullNode;
         if (typeof options === 'object' && (options.fullNode || options.fullHost)) {
             fullNode = options.fullNode || options.fullHost;
-            solidityNode = options.solidityNode || options.fullHost;
+            solidityNode = options.solidityNode || options.relayNode || options.fullHost;
             eventServer = options.eventServer || options.fullHost;
             privateKey = options.privateKey;
         } else {
