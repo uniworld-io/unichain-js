@@ -13,6 +13,8 @@ import Plugin from 'lib/plugin';
 import Event from 'lib/event';
 import {keccak256} from 'utils/ethersUtils';
 import {ADDRESS_PREFIX} from 'utils/address';
+import bip39 from 'bip39'
+import bip32 from 'bip32'
 
 const DEFAULT_VERSION = '1.0.1';
 
@@ -26,6 +28,8 @@ export default class UnichainJS extends EventEmitter {
     static Event = Event;
     static version = version;
     static utils = utils;
+    static bip32 = bip32;
+    static bip39 = bip39;
 
     constructor(options = false,
                 // for retro-compatibility:
@@ -57,6 +61,8 @@ export default class UnichainJS extends EventEmitter {
         this.unx = this.api; //for compatible 
         this.plugin = new Plugin(this, options);
         this.utils = utils;
+        this.bip32 = bip32;
+        this.bip39 = bip39;
 
         this.setFullNode(fullNode);
         this.setSolidityNode(solidityNode);
