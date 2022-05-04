@@ -1,5 +1,5 @@
 
-import {utils} from 'ethers';
+import {utils, Wallet} from 'ethers';
 
 const keccak256 = utils.keccak256;
 const sha256 = utils.sha256;
@@ -14,5 +14,6 @@ export {
     toUtf8Bytes,
     recoverAddress,
     SigningKey,
-    AbiCoder
+    AbiCoder,
+    Wallet
 }
