@@ -56,7 +56,7 @@ export default class TransactionBuilder {
         }
 
         if (!callback)
-            return this.injectPromise(this.sendUnw, to, amount, from, expiredTime, options);
+            return this.injectPromise(this.sendUnw, to, amount, expiredTime, from, options);
 
         // accept amounts passed as strings
         amount = parseInt(amount)

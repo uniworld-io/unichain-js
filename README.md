@@ -1,6 +1,8 @@
 
 ## What is UnichainJS?
  UniChainJS is a javascript library to work with Unichain network. It provides essential functions to manage a wallet, deploy smart contracts, build transactions, broadcast transactions to the network
+ 
+ Detailed document and API list can be found at the [Developer page](https://developers.unichain.world/docs/unichainJS)
 
 ## How to use
 1. Install Unichain-JS by `npm install @uniworld/unichain-js`
@@ -38,7 +40,7 @@ console.log(account)
 */
 
 //Get transaction 
-unichain.unx.getTransaction(txid, (err, tx) => {
+unichain.api.getTransaction(txid, (err, tx) => {
     console.log('Transaction:', tx)
 })
 
@@ -54,8 +56,8 @@ const data = {
 //private key of fromAddress
 const testPriKey = '45438936af44f337242b9823df58aed1af559682c2dbc2f40205d2124e9c1133' 
 const unsingedTx = await unichain.currentProviders().fullNode.request('wallet/createtransaction', data, 'post')
-const signedTx = await unichain.unx.signTransaction(unsingedTx, testPriKey, 0)
-const res = await unichain.unx.sendRawTransaction(signedTx)
+const signedTx = await unichain.api.signTransaction(unsingedTx, testPriKey, 0)
+const res = await unichain.api.sendRawTransaction(signedTx)
 console.log(res)
 
 //Working with smart contract - for example simple coin smart contract
@@ -75,6 +77,7 @@ console.log(res)
 support@unichain.world
 ### website:
 - [UniChain Website](https://unichain.world)
+- [Developer website](https://developers.unichain.world)
 - [UniWorld Website](https://uniworld.io)
 - [UniMe Website](https://unime.world)
 - [UniBot Website](https://unibot.org)
