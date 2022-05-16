@@ -2,7 +2,7 @@ import axios from 'axios';
 import utils from 'utils';
 
 export default class HttpProvider {
-    constructor(host, timeout = 30000, user = false, password = false, headers = {}, statusPage = '/') {
+    constructor(host, isServiceWorker = false, timeout = 30000, user = false, password = false, headers = {}, statusPage = '/') {
         if (!utils.isValidURL(host))
             throw new Error('Invalid URL provided to HttpProvider');
 
@@ -20,6 +20,7 @@ export default class HttpProvider {
         this.password = password;
         this.headers = headers;
         this.statusPage = statusPage;
+        this.isServiceWorker = isServiceWorker
 
         this.instance = axios.create({
             baseURL: host,
@@ -44,6 +45,26 @@ export default class HttpProvider {
 
     request(url, payload = {}, method = 'get') {
         method = method.toLowerCase();
+
+        if(this.isServiceWorker) {
+            switch (method) {
+                case 'get':
+                    const getUrl = new URL(`${this.host}/${url}`)
+                    for(let k in payload) {
+                        url.searchParams.append(k, payload[k])
+                    }
+                    return fetch(getUrl).then(r => r.json())
+                default:
+                    console.log('unichainjs', `${this.host}/${url}`, method, payload)
+                    return fetch(`${this.host}/${url}`, {
+                        method,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    }).then(r => r.json())
+            }
+        }
 
         return this.instance.request({
             data: method == 'post' && Object.keys(payload).length ? payload : null,

@@ -871,7 +871,7 @@ export default class Api {
         }).catch(err => callback(err));
     }
 
-    async sendTransaction(to = false, amount = false, options = {}, callback = false) {
+    async sendTransaction(to = false, amount = false, expiredTime = 0, options = {}, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
@@ -900,7 +900,7 @@ export default class Api {
 
         try {
             const address = options.privateKey ? this.unichainJS.address.fromPrivateKey(options.privateKey) : options.address;
-            const transaction = await this.unichainJS.transactionBuilder.sendUnw(to, amount, address);
+            const transaction = await this.unichainJS.transactionBuilder.sendUnw(to, amount, expiredTime, address);
             const signedTransaction = await this.sign(transaction, options.privateKey || undefined);
             const result = await this.sendRawTransaction(signedTransaction);
 
@@ -1456,4 +1456,360 @@ export default class Api {
         }).catch(err => callback(err));
     }
 
+    /* NEW CONTRACT POSBRIGDE API */
+    /**
+     * 
+     * @param {*} new_owner 
+     * @param {*} min_validator 
+     * @param {*} validators 
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns 
+     */
+    async posbridgeSetup(new_owner, min_validator, validators, options = {}, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (typeof options === 'string') {
+            options = {
+                privateKey: options
+            };
+        }
+
+        if (!callback){
+            return this.injectPromise(this.setupPosbridge, new_owner, min_validator, validators, options);
+        }
+
+        if (validators && validators.length < min_validator) {
+            return callback('Number of validator in list is not enough');
+        }
+
+        if (!new_owner) {
+            return callback('New owner is required');
+        }
+
+        options = {
+            privateKey: this.unichainJS.defaultPrivateKey,
+            address: this.unichainJS.defaultAddress.hex,
+            ...options
+        };
+
+        if (!options.privateKey && !options.address){
+            return callback('Function requires either a private key or address to be set');
+        }
+
+        try {
+            const address = options.privateKey ? this.unichainJS.address.fromPrivateKey(options.privateKey) : options.address;
+            const transaction = await this.unichainJS.transactionBuilder.setupPosbridge(address, new_owner, min_validator, validators);
+            const signedTransaction = await this.sign(transaction, options.privateKey || undefined);
+            const result = await this.sendRawTransaction(signedTransaction);
+
+            return callback(null, result);
+        } catch (ex) {
+            return callback(ex);
+        }
+    }
+
+    /**
+     * 
+     * @param {*} root_chainid 
+     * @param {*} root_token [hex address if token, symbol if native]
+     * @param {*} child_chainid 
+     * @param {*} child_token [hex address]
+     * @param {*} root_or_child 
+     * @param {*} type 
+     * 1: native
+     * 2: erc20
+     * 3: erc721]
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns 
+     */
+    async posbridgeMapToken(root_token, root_chainid, child_token, child_chainid, root_or_child, type, options = {}, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (typeof options === 'string') {
+            options = {
+                privateKey: options
+            };
+        }
+
+        if (!callback){
+            return this.injectPromise(this.posbridgeMapToken, root_token, root_chainid, child_token, child_chainid, root_or_child, type, options);
+        }
+
+        options = {
+            privateKey: this.unichainJS.defaultPrivateKey,
+            address: this.unichainJS.defaultAddress.hex,
+            ...options
+        };
+
+        if (!options.privateKey && !options.address){
+            return callback('Function requires either a private key or address to be set');
+        }
+
+        try {
+            const address = options.privateKey ? this.unichainJS.address.fromPrivateKey(options.privateKey) : options.address;
+            const transaction = await this.unichainJS.transactionBuilder.posbridgeMapToken(address, root_token, root_chainid, child_token, child_chainid, root_or_child, type);
+            const signedTransaction = await this.sign(transaction, options.privateKey || undefined);
+            const result = await this.sendRawTransaction(signedTransaction);
+
+            return callback(null, result);
+        } catch (ex) {
+            return callback(ex);
+        }
+    }
+
+    /**
+     * 
+     * @param {*} root_token 
+     * @param {*} root_chainid 
+     * @param {*} child_token 
+     * @param {*} child_chainid 
+     * @param {*} type 
+     * 1: native
+     * 2: erc20
+     * 3: erc721]
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns 
+     */
+    async posbridgeCleanMapToken(root_token, root_chainid, child_token, child_chainid, type, options = {}, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (typeof options === 'string') {
+            options = {
+                privateKey: options
+            };
+        }
+
+        if (!callback){
+            return this.injectPromise(this.posbridgeCleanMapToken, root_token, root_chainid, child_token, child_chainid, type, options);
+        }
+
+        options = {
+            privateKey: this.unichainJS.defaultPrivateKey,
+            address: this.unichainJS.defaultAddress.hex,
+            ...options
+        };
+
+        if (!options.privateKey && !options.address){
+            return callback('Function requires either a private key or address to be set');
+        }
+
+        try {
+            const address = options.privateKey ? this.unichainJS.address.fromPrivateKey(options.privateKey) : options.address;
+            const transaction = await this.unichainJS.transactionBuilder.posbridgeCleanMapToken(address, root_token, root_chainid, child_token, child_chainid, type);
+            const signedTransaction = await this.sign(transaction, options.privateKey || undefined);
+            const result = await this.sendRawTransaction(signedTransaction);
+
+            return callback(null, result);
+        } catch (ex) {
+            return callback(ex);
+        }
+    }
+
+    /**
+     * 
+     * @param {*} root_token [hex address if token, unw if native]
+     * @param {*} child_chainid 
+     * @param {*} receive_address 
+     * @param {*} data [amount or token id]
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns 
+     */
+    async posbridgeDeposit(root_token, receive_address, child_chainid, data, options = {}, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (typeof options === 'string') {
+            options = {
+                privateKey: options
+            };
+        }
+
+        if (!callback){
+            return this.injectPromise(this.posbridgeDeposit, root_token, receive_address, child_chainid, data, options);
+        }
+
+        options = {
+            privateKey: this.unichainJS.defaultPrivateKey,
+            address: this.unichainJS.defaultAddress.hex,
+            ...options
+        };
+
+        if (!options.privateKey && !options.address){
+            return callback('Function requires either a private key or address to be set');
+        }
+
+        try {
+            const address = options.privateKey ? this.unichainJS.address.fromPrivateKey(options.privateKey) : options.address;
+            const transaction = await this.unichainJS.transactionBuilder.posbridgeDeposit(address, root_token, receive_address, child_chainid, data);
+            const signedTransaction = await this.sign(transaction, options.privateKey || undefined);
+            const result = await this.sendRawTransaction(signedTransaction);
+
+            return callback(null, result);
+        } catch (ex) {
+            return callback(ex);
+        }
+    }
+
+    /**
+     * 
+     * @param {*} signatures [rlp encoded]
+     * @param {*} message [rlp encoded]
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns 
+     */
+    async posBrigdeDepositExec(signatures, message, options = {}, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (typeof options === 'string') {
+            options = {
+                privateKey: options
+            };
+        }
+
+        if (!callback){
+            return this.injectPromise(this.posBrigdeDepositExec, signatures, message, options);
+        }
+
+        options = {
+            privateKey: this.unichainJS.defaultPrivateKey,
+            address: this.unichainJS.defaultAddress.hex,
+            ...options
+        };
+
+        if (!options.privateKey && !options.address){
+            return callback('Function requires either a private key or address to be set');
+        }
+
+        try {
+            const address = options.privateKey ? this.unichainJS.address.fromPrivateKey(options.privateKey) : options.address;
+            const transaction = await this.unichainJS.transactionBuilder.posBrigdeDepositExec(address, signatures, message);
+            const signedTransaction = await this.sign(transaction, options.privateKey || undefined);
+            const result = await this.sendRawTransaction(signedTransaction);
+
+            return callback(null, result);
+        } catch (ex) {
+            return callback(ex);
+        }
+    }
+
+    /**
+     * 
+     * @param {*} child_token 
+     * @param {*} receive_address 
+     * @param {*} data [amount or tokenid]
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns 
+     */
+    async posBrigdeWithdraw(child_token, receive_address, data, options = {}, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (typeof options === 'string') {
+            options = {
+                privateKey: options
+            };
+        }
+
+        if (!callback){
+            return this.injectPromise(this.posBrigdeWithdraw, child_token, receive_address, data, options);
+        }
+
+        options = {
+            privateKey: this.unichainJS.defaultPrivateKey,
+            address: this.unichainJS.defaultAddress.hex,
+            ...options
+        };
+
+        if (!options.privateKey && !options.address){
+            return callback('Function requires either a private key or address to be set');
+        }
+
+        try {
+            const address = options.privateKey ? this.unichainJS.address.fromPrivateKey(options.privateKey) : options.address;
+            const transaction = await this.unichainJS.transactionBuilder.posBrigdeWithdraw(address, child_token, receive_address, data);
+            const signedTransaction = await this.sign(transaction, options.privateKey || undefined);
+            const result = await this.sendRawTransaction(signedTransaction);
+
+            return callback(null, result);
+        } catch (ex) {
+            return callback(ex);
+        }
+    }
+
+    /**
+     * 
+     * @param {*} signatures [rlp encoded]
+     * @param {*} message [rlp encoded]
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns 
+     */
+    async posBrigdeWithdrawExec(signatures, message, options = {}, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (typeof options === 'string') {
+            options = {
+                privateKey: options
+            };
+        }
+
+        if (!callback){
+            return this.injectPromise(this.posBrigdeWithdrawExec, signatures, message, options);
+        }
+
+        options = {
+            privateKey: this.unichainJS.defaultPrivateKey,
+            address: this.unichainJS.defaultAddress.hex,
+            ...options
+        };
+
+        if (!options.privateKey && !options.address){
+            return callback('Function requires either a private key or address to be set');
+        }
+
+        try {
+            const address = options.privateKey ? this.unichainJS.address.fromPrivateKey(options.privateKey) : options.address;
+            const transaction = await this.unichainJS.transactionBuilder.posBrigdeWithdrawExec(address, signatures, message);
+            const signedTransaction = await this.sign(transaction, options.privateKey || undefined);
+            const result = await this.sendRawTransaction(signedTransaction);
+
+            return callback(null, result);
+        } catch (ex) {
+            return callback(ex);
+        }
+    }
+
+    // async subcrible(topic, confirm = true, since = Date.now(), sort = 'timeStamp', cb) {
+    //     const timer = since
+    //     setInterval(() => {
+    //         const sinceNow = timer + 3000
+    //         const resp = await axios.get(`http://13.213.56.230:8080/event/native?topic=${topic}&confirmed=${confirm}&since=${sinceNow}&sort=${sort}`)
+    //         cb(resp.data)
+    //     }, 3000)
+    // }
 };

@@ -29,9 +29,8 @@ export default class UnichainJS extends EventEmitter {
     static utils = utils;
     static Wallet = Wallet
 
-    constructor(options = false,
-                // for retro-compatibility:
-                solidityNode = false, eventServer = false, privateKey = false) {
+    // for retro-compatibility: solidityNode
+    constructor(options = false, solidityNode = false, eventServer = false, privateKey = false, isServiceWorker = false) {
         super();
 
         let fullNode;
@@ -40,18 +39,19 @@ export default class UnichainJS extends EventEmitter {
             solidityNode = options.solidityNode || options.relayNode || options.fullHost;
             eventServer = options.eventServer || options.fullHost;
             privateKey = options.privateKey;
+            isServiceWorker = options.isServiceWorker || false;
         } else {
             fullNode = options;
         }
 
         if (utils.isString(fullNode))
-            fullNode = new providers.HttpProvider(fullNode);
+            fullNode = new providers.HttpProvider(fullNode, isServiceWorker);
 
         if (utils.isString(solidityNode))
-            solidityNode = new providers.HttpProvider(solidityNode);
+            solidityNode = new providers.HttpProvider(solidityNode, isServiceWorker);
 
         if (utils.isString(eventServer))
-            eventServer = new providers.HttpProvider(eventServer);
+            eventServer = new providers.HttpProvider(eventServer, isServiceWorker);
 
         this.event = new Event(this);
         this.transactionBuilder = new TransactionBuilder(this);
@@ -89,6 +89,7 @@ export default class UnichainJS extends EventEmitter {
 
         this.fullnodeVersion = DEFAULT_VERSION;
         this.injectPromise = injectpromise(this);
+        this.isServiceWorker = isServiceWorker
     }
 
     async getFullnodeVersion() {
@@ -155,7 +156,7 @@ export default class UnichainJS extends EventEmitter {
 
     setFullNode(fullNode) {
         if (utils.isString(fullNode))
-            fullNode = new providers.HttpProvider(fullNode);
+            fullNode = new providers.HttpProvider(fullNode, this.isServiceWorker);
 
         if (!this.isValidProvider(fullNode))
             throw new Error('Invalid full node provided');
@@ -168,7 +169,7 @@ export default class UnichainJS extends EventEmitter {
 
     setSolidityNode(solidityNode) {
         if (utils.isString(solidityNode))
-            solidityNode = new providers.HttpProvider(solidityNode);
+            solidityNode = new providers.HttpProvider(solidityNode, this.isServiceWorker);
 
         if (!this.isValidProvider(solidityNode))
             throw new Error('Invalid solidity node provided');
