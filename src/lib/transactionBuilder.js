@@ -2386,4 +2386,241 @@ export default class TransactionBuilder {
         this.alterTransaction(transaction, {data, dataFormat}, callback);
     }
 
+    /* NEW CONTRACT POSBRIGDE */
+    /**
+     * endpoint: /wallet/posbridgesetup
+     * @param {*} owner_address 
+     * @param {*} new_owner 
+     * @param {*} min_validator 
+     * @param {*} validators 
+     * @param {*} consensus_f1 
+     * @param {*} consensus_f2 
+     * consensus rate: f1/f2 = 2/3
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns unsigned transaction data
+     */
+    posBrigdeSetup(owner_address, new_owner, min_validator = 1, validators = [], consensus_f1, consensus_f2, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.setupPosBrigde, owner_address, new_owner, min_validator, validators, options);
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            new_owner: toHex(new_owner),
+            min_validator,
+            validators,
+            consensus_f1,
+            consensus_f2,
+        };
+
+        let apiPath = 'wallet/posbridgesetup'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * endpoint: /posbridgemaptoken
+     * @param {*} owner_address 
+     * @param {*} root_chainid 
+     * @param {*} root_token [hex address if token, symbol if native]
+     * @param {*} child_chainid 
+     * @param {*} child_token [hex address]
+     * @param {*} root_or_child 
+     * @param {*} type 
+     * 1: native
+     * 2: erc20
+     * 3: erc721]
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns unsigned transaction data
+     */
+    posBrigdeMapToken(owner_address, root_token, root_chainid, child_token, child_chainid, root_or_child, type, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.posBrigdeMapToken, calldata, root_token, root_chainid, child_token, child_chainid, root_or_child, options);
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            calldata,
+            root_token,
+            root_chainid,
+            child_token,
+            child_chainid, 
+            root_or_child,
+            type,
+        };
+
+        let apiPath = 'wallet/posbridgemaptoken'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * endpoint: /posbridgecleanmaptoken
+     * @param {*} owner_address 
+     * @param {*} root_token 
+     * @param {*} root_chainid 
+     * @param {*} child_token 
+     * @param {*} child_chainid 
+     * @param {*} type 
+     * 1: native
+     * 2: erc20
+     * 3: erc721]
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns unsigned transaction data
+     */
+    posBrigdeCleanMapToken(owner_address, root_token, root_chainid, child_token, child_chainid, type, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.posBrigdeCleanMapToken, root_token, root_chainid, child_token, child_chainid, root_or_child, options);
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            root_token,
+            root_chainid,
+            child_token,
+            child_chainid, 
+            type,
+        };
+
+        let apiPath = 'wallet/posbridgecleanmaptoken'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * endpoint: /posbridgedeposit
+     * @param {*} owner_address 
+     * @param {*} root_token [hex address if token, unw if native]
+     * @param {*} child_chainid 
+     * @param {*} receive_address 
+     * @param {*} data [amount or token id]
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns unsigned transaction data
+     */
+    posBrigdeDeposit(owner_address, root_token, receive_address, child_chainid, data, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.posBrigdeDeposit, owner_address, type, root_token, child_address, child_chainid, data, options);
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            root_token,
+            receive_address,
+            child_chainid,
+            data, 
+        };
+
+        let apiPath = 'wallet/posbridgedeposit'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * endpoint: /posbridgedepositexec
+     * @param {*} owner_address 
+     * @param {*} signatures [rlp encoded]
+     * @param {*} message [rlp encoded]
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns unsigned transaction data
+     */
+    posBrigdeDepositExec(owner_address, signatures, message, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.posBrigdeDepositExec, owner_address, calldata, options);
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            signatures,
+            message,
+        };
+
+        let apiPath = 'wallet/posbridgedepositexec'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * endpoint: /posbridgewithdraw
+     * @param {*} owner_address 
+     * @param {*} child_token 
+     * @param {*} receive_address 
+     * @param {*} data [amount or tokenid]
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns unsigned transaction data 
+     */
+    posBrigdeWithdraw(owner_address, child_token, receive_address, data, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.posBrigdeWithdraw, owner_address, calldata, options);
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            child_token,
+            receive_address,
+            data
+        };
+
+        let apiPath = 'wallet/posbridgewithdraw'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * endpoint: /posbridgewithdrawexec
+     * @param {*} owner_address 
+     * @param {*} signatures [rlp encoded]
+     * @param {*} message [rlp encoded]
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns unsigned transaction data 
+     */
+    posBrigdeWithdrawExec(owner_address, signatures, message, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.posBrigdeWithdrawExec, owner_address, calldata, options);
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            signatures,
+            message,
+        };
+
+        let apiPath = 'wallet/posbridgewithdrawexec'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
 }
