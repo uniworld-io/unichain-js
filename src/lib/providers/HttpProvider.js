@@ -51,7 +51,7 @@ export default class HttpProvider {
                 case 'get':
                     const getUrl = new URL(`${this.host}/${url}`)
                     for(let k in payload) {
-                        url.searchParams.append(k, payload[k])
+                        getUrl.searchParams.append(k, payload[k])
                     }
                     return fetch(getUrl).then(r => r.json())
                 default:
