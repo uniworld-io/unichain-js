@@ -3018,9 +3018,9 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc40Create(owner_address, data, callback = false) {
+    urc20Create(owner_address, data, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc40Create(owner_address, data));
+            return this.injectPromise(this.urc20Create(owner_address, data));
         }
 
         // All data of new token
@@ -3071,7 +3071,7 @@ export default class TransactionBuilder {
             create_acc_fee
         };
 
-        let apiPath = 'wallet/urc40createcontract'
+        let apiPath = 'wallet/urc20createcontract'
         this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
@@ -3086,9 +3086,9 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc40TransferFrom(owner_address, from, to, address, amount, available_time, callback = false) {
+    urc20TransferFrom(owner_address, from, to, address, amount, available_time, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc40TransferFrom(owner_address, from, to, address, amount, available_time));
+            return this.injectPromise(this.urc20TransferFrom(owner_address, from, to, address, amount, available_time));
         }
 
         let requestData = {
@@ -3100,7 +3100,7 @@ export default class TransactionBuilder {
             available_time, 
         };
 
-        let apiPath = 'wallet/urc40transferfrom'
+        let apiPath = 'wallet/urc20transferfrom'
         this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
@@ -3114,9 +3114,9 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc40Transfer(owner_address, address, to, amount, available_time, callback = false) {
+    urc20Transfer(owner_address, address, to, amount, available_time, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc40Transfer(owner_address, address, to, amount, available_time));
+            return this.injectPromise(this.urc20Transfer(owner_address, address, to, amount, available_time));
         }
 
         let requestData = {
@@ -3127,7 +3127,7 @@ export default class TransactionBuilder {
             available_time, 
         };
 
-        let apiPath = 'wallet/urc40transfer'
+        let apiPath = 'wallet/urc20transfer'
         this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
@@ -3140,9 +3140,9 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc40Approve(owner_address, address, spender, amount, callback = false) {
+    urc20Approve(owner_address, address, spender, amount, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc40Approve(owner_address, address, spender, amount));
+            return this.injectPromise(this.urc20Approve(owner_address, address, spender, amount));
         }
 
         let requestData = {
@@ -3152,7 +3152,7 @@ export default class TransactionBuilder {
             amount, 
         };
 
-        let apiPath = 'wallet/urc40approve'
+        let apiPath = 'wallet/urc20approve'
         this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
@@ -3164,9 +3164,9 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc40Mint(owner_address, address, amount, callback = false) {
+    urc20Mint(owner_address, address, amount, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc40Mint(owner_address, address, amount));
+            return this.injectPromise(this.urc20Mint(owner_address, address, amount));
         }
 
         let requestData = {
@@ -3175,7 +3175,7 @@ export default class TransactionBuilder {
             amount, 
         };
 
-        let apiPath = 'wallet/urc40mint'
+        let apiPath = 'wallet/urc20mint'
         this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
@@ -3187,9 +3187,9 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc40Burn(owner_address, address, amount, callback = false) {
+    urc20Burn(owner_address, address, amount, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc40Burn(owner_address, address, amount));
+            return this.injectPromise(this.urc20Burn(owner_address, address, amount));
         }
 
         let requestData = {
@@ -3198,7 +3198,7 @@ export default class TransactionBuilder {
             amount, 
         };
 
-        let apiPath = 'wallet/urc40burn'
+        let apiPath = 'wallet/urc20burn'
         this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
@@ -3210,9 +3210,9 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc40TransferOwner(owner_address, to_address, address, callback = false) {
+    urc20TransferOwner(owner_address, to_address, address, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc40TransferOwner(owner_address, to_address, address));
+            return this.injectPromise(this.urc20TransferOwner(owner_address, to_address, address));
         }
 
         let requestData = {
@@ -3221,7 +3221,7 @@ export default class TransactionBuilder {
             address: toHex(address),
         };
 
-        let apiPath = 'wallet/urc40transferowner'
+        let apiPath = 'wallet/urc20transferowner'
         this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
@@ -3233,9 +3233,9 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc40Exchange(owner_address, address, amount, callback = false) {
+    urc20Exchange(owner_address, address, amount, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc40Exchange(owner_address, address, amount));
+            return this.injectPromise(this.urc20Exchange(owner_address, address, amount));
         }
 
         let requestData = {
@@ -3244,7 +3244,7 @@ export default class TransactionBuilder {
             amount
         };
 
-        let apiPath = 'wallet/urc40exchange'
+        let apiPath = 'wallet/urc20exchange'
         this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
@@ -3256,9 +3256,9 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc40ContributePoolFee(owner_address, address, amount, callback = false) {
+    urc20ContributePoolFee(owner_address, address, amount, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc40ContributePoolFee(owner_address, address, amount));
+            return this.injectPromise(this.urc20ContributePoolFee(owner_address, address, amount));
         }
 
         let requestData = {
@@ -3267,7 +3267,7 @@ export default class TransactionBuilder {
             amount
         };
 
-        let apiPath = 'wallet/urc40contributepoolfee'
+        let apiPath = 'wallet/urc20contributepoolfee'
         this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
@@ -3287,9 +3287,9 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc40UpdateParams(owner_address, address, fee, extra_fee_rate, lot, url, total_supply, fee_pool, exch_unx_num, exch_num, create_acc_fee, callback = false) {
+    urc20UpdateParams(owner_address, address, fee, extra_fee_rate, lot, url, total_supply, fee_pool, exch_unx_num, exch_num, create_acc_fee, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc40UpdateParams(owner_address, address, fee, extra_fee_rate, lot, url, total_supply, fee_pool, exch_unx_num, exch_num, create_acc_fee));
+            return this.injectPromise(this.urc20UpdateParams(owner_address, address, fee, extra_fee_rate, lot, url, total_supply, fee_pool, exch_unx_num, exch_num, create_acc_fee));
         }
 
         let requestData = {
@@ -3306,7 +3306,7 @@ export default class TransactionBuilder {
             create_acc_fee
         };
 
-        let apiPath = 'wallet/urc40updateparams'
+        let apiPath = 'wallet/urc20updateparams'
         this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
@@ -3317,9 +3317,9 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc40WithdrawFuture(owner_address, address, callback = false) {
+    urc20WithdrawFuture(owner_address, address, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc40WithdrawFuture(owner_address, address));
+            return this.injectPromise(this.urc20WithdrawFuture(owner_address, address));
         }
 
         let requestData = {
@@ -3327,7 +3327,7 @@ export default class TransactionBuilder {
             address: toHex(address),
         };
 
-        let apiPath = 'wallet/urc40withdrawfuture'
+        let apiPath = 'wallet/urc20withdrawfuture'
         this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 }
