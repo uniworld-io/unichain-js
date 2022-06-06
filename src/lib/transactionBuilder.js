@@ -2393,21 +2393,22 @@ export default class TransactionBuilder {
      * @param {*} new_owner 
      * @param {*} min_validator 
      * @param {*} validators 
-     * @param {*} consensus_f1 
-     * @param {*} consensus_f2 
-     * consensus rate: f1/f2 = 2/3
+     * @param {*} consensus_rate 
+     * @param {*} predicate_native 
+     * @param {*} predicate_token
+     * @param {*} predicate_nft
      * @param {*} options 
      * @param {*} callback 
      * @returns unsigned transaction data
      */
-    posBrigdeSetup(owner_address, new_owner, min_validator = 1, validators = [], consensus_f1, consensus_f2, options, callback = false) {
+    posBridgeSetup(owner_address, new_owner, min_validator = 1, validators = [], consensus_rate, predicate_native, predicate_token, predicate_nft, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
         }
 
         if (!callback){
-            return this.injectPromise(this.setupPosBrigde, owner_address, new_owner, min_validator, validators, options);
+            return this.injectPromise(this.setupPosBridge, owner_address, new_owner, min_validator, validators, consensus_rate, predicate_native, predicate_token, predicate_nft, options);
         }
 
         let requestData = {
@@ -2415,8 +2416,10 @@ export default class TransactionBuilder {
             new_owner: toHex(new_owner),
             min_validator,
             validators,
-            consensus_f1,
-            consensus_f2,
+            consensus_rate, 
+            predicate_native,
+            predicate_token, 
+            predicate_nft
         };
 
         let apiPath = 'wallet/posbridgesetup'
@@ -2430,7 +2433,6 @@ export default class TransactionBuilder {
      * @param {*} root_token [hex address if token, symbol if native]
      * @param {*} child_chainid 
      * @param {*} child_token [hex address]
-     * @param {*} root_or_child 
      * @param {*} type 
      * 1: native
      * 2: erc20
@@ -2439,25 +2441,23 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns unsigned transaction data
      */
-    posBrigdeMapToken(owner_address, root_token, root_chainid, child_token, child_chainid, root_or_child, type, options, callback = false) {
+    posBridgeMapToken(owner_address, root_chainid, root_token, child_chainid, child_token, type, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
         }
 
         if (!callback){
-            return this.injectPromise(this.posBrigdeMapToken, calldata, root_token, root_chainid, child_token, child_chainid, root_or_child, options);
+            return this.injectPromise(this.posBridgeMapToken, root_chainid, root_token, child_chainid, child_token, type, options);
         }
 
         let requestData = {
             owner_address: toHex(owner_address),
-            calldata,
-            root_token,
-            root_chainid,
-            child_token,
+            root_chainid, 
+            root_token, 
             child_chainid, 
-            root_or_child,
-            type,
+            child_token, 
+            type
         };
 
         let apiPath = 'wallet/posbridgemaptoken'
@@ -2467,10 +2467,10 @@ export default class TransactionBuilder {
     /**
      * endpoint: /posbridgecleanmaptoken
      * @param {*} owner_address 
-     * @param {*} root_token 
      * @param {*} root_chainid 
-     * @param {*} child_token 
+     * @param {*} root_token 
      * @param {*} child_chainid 
+     * @param {*} child_token 
      * @param {*} type 
      * 1: native
      * 2: erc20
@@ -2479,23 +2479,23 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns unsigned transaction data
      */
-    posBrigdeCleanMapToken(owner_address, root_token, root_chainid, child_token, child_chainid, type, options, callback = false) {
+    posBridgeCleanMapToken(owner_address, root_chainid, root_token, child_chainid, child_token, type, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
         }
 
         if (!callback){
-            return this.injectPromise(this.posBrigdeCleanMapToken, root_token, root_chainid, child_token, child_chainid, root_or_child, options);
+            return this.injectPromise(this.posBridgeCleanMapToken, root_chainid, root_token, child_chainid, child_token, type, options);
         }
 
         let requestData = {
             owner_address: toHex(owner_address),
-            root_token,
-            root_chainid,
-            child_token,
+            root_chainid, 
+            root_token, 
             child_chainid, 
-            type,
+            child_token, 
+            type
         };
 
         let apiPath = 'wallet/posbridgecleanmaptoken'
@@ -2513,22 +2513,22 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns unsigned transaction data
      */
-    posBrigdeDeposit(owner_address, root_token, receive_address, child_chainid, data, options, callback = false) {
+    posBridgeDeposit(owner_address, root_token, child_chainid, receive_address, data, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
         }
 
         if (!callback){
-            return this.injectPromise(this.posBrigdeDeposit, owner_address, type, root_token, child_address, child_chainid, data, options);
+            return this.injectPromise(this.posBridgeDeposit, owner_address, root_token, child_chainid, receive_address, data, options);
         }
 
         let requestData = {
             owner_address: toHex(owner_address),
-            root_token,
-            receive_address,
-            child_chainid,
-            data, 
+            root_token, 
+            child_chainid, 
+            receive_address, 
+            data
         };
 
         let apiPath = 'wallet/posbridgedeposit'
@@ -2544,14 +2544,14 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns unsigned transaction data
      */
-    posBrigdeDepositExec(owner_address, signatures, message, options, callback = false) {
+    posBridgeDepositExec(owner_address, signatures, message, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
         }
 
         if (!callback){
-            return this.injectPromise(this.posBrigdeDepositExec, owner_address, calldata, options);
+            return this.injectPromise(this.posBridgeDepositExec, owner_address, calldata, options);
         }
 
         let requestData = {
@@ -2574,20 +2574,20 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns unsigned transaction data 
      */
-    posBrigdeWithdraw(owner_address, child_token, receive_address, data, options, callback = false) {
+    posBridgeWithdraw(owner_address, child_token, receive_address, data, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
         }
 
         if (!callback){
-            return this.injectPromise(this.posBrigdeWithdraw, owner_address, calldata, options);
+            return this.injectPromise(this.posBridgeWithdraw, owner_address, child_token, receive_address, data, options);
         }
 
         let requestData = {
             owner_address: toHex(owner_address),
-            child_token,
-            receive_address,
+            child_token, 
+            receive_address, 
             data
         };
 
@@ -2604,14 +2604,14 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns unsigned transaction data 
      */
-    posBrigdeWithdrawExec(owner_address, signatures, message, options, callback = false) {
+    posBridgeWithdrawExec(owner_address, signatures, message, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
         }
 
         if (!callback){
-            return this.injectPromise(this.posBrigdeWithdrawExec, owner_address, calldata, options);
+            return this.injectPromise(this.posBridgeWithdrawExec, owner_address, signatures, message, options);
         }
 
         let requestData = {
@@ -2621,6 +2621,713 @@ export default class TransactionBuilder {
         };
 
         let apiPath = 'wallet/posbridgewithdrawexec'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /** NEW CONTRACT URC721 */
+    /**
+     * 
+     * @param {*} owner_address 
+     * @param {*} address 
+     * @param {*} symbol 
+     * @param {*} name 
+     * @param {*} total_supply 
+     * @param {*} minter 
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc721Create(owner_address, symbol, name, total_supply, minter, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.urc721Create, owner_address, address, symbol, name, total_supply, minter, options);
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            symbol,
+            name,
+            total_supply, 
+            minter
+        };
+
+        let apiPath = 'wallet/urc721createcontract'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} owner_address 
+     * @param {*} address 
+     * @param {*} to_address 
+     * @param {*} uri 
+     * @param {*} token_id 
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc721Mint(owner_address, address, to_address, uri, token_id, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.urc721Mint, owner_address, address, to_address, uri, token_id, options);
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            address: toHex(address),
+            to_address: toHex(to_address),
+            uri,
+            token_id,
+        };
+
+        let apiPath = 'wallet/urc721mint'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} owner_address 
+     * @param {*} address 
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc721RemoveMinter(owner_address, address, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.urc721RemoveMinter, owner_address, address, options);
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            address: toHex(address),
+        };
+
+        let apiPath = 'wallet/urc721removeminter'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} owner_address 
+     * @param {*} address 
+     * @param {*} minter 
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc721AddMinter(owner_address, address, minter, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.urc721AddMinter, owner_address, address, minter, options);
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            address: toHex(address),
+            minter: toHex(minter),
+        };
+
+        let apiPath = 'wallet/urc721addminter'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} owner_address 
+     * @param {*} address 
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc721RenounceMinter(owner_address, address, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.urc721RenounceMinter, owner_address, address, options);
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            address: toHex(address),
+        };
+
+        let apiPath = 'wallet/urc721renounceminter'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} owner_address 
+     * @param {*} address 
+     * @param {*} token_id 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc721Burn(owner_address, address, token_id, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.urc721Burn, owner_address, address, token_id, options);
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            address: toHex(address),
+            token_id,
+        };
+
+        let apiPath = 'wallet/urc721burn'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} owner_address 
+     * @param {*} address 
+     * @param {*} token_id 
+     * @param {*} to 
+     * @param {*} approve 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc721Approve(owner_address, address, token_id, to, approve, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.urc721Approve, owner_address, address, token_id, to, approve, options);
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            address: toHex(address),
+            token_id,
+            to: toHex(to),
+            approve,
+        };
+
+        let apiPath = 'wallet/urc721approve'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} owner_address 
+     * @param {*} to_address 
+     * @param {*} approve 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc721SetApprovalForAll(owner_address, to_address, approve, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.urc721SetApprovalForAll, owner_address, to_address, approve, options);
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            to_address: toHex(to_address),
+            approve,
+        };
+
+        let apiPath = 'wallet/urc721setapprovalforall'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} owner_address 
+     * @param {*} address 
+     * @param {*} to 
+     * @param {*} token_id 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc721TransferFrom(owner_address, address, to, token_id, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.urc721TransferFrom, owner_address, address, to, token_id, options);
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            address: toHex(address),
+            to: toHex(to),
+            token_id,
+        };
+
+        let apiPath = 'wallet/urc721transferfrom'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc721BalanceOf(callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc721BalanceOf);
+        }
+
+        let apiPath = 'wallet/urc721balanceof'
+        this.unichainJS.fullNode.request(apiPath, null, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc721Name(callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc721Name);
+        }
+
+        let apiPath = 'wallet/urc721name'
+        this.unichainJS.fullNode.request(apiPath, null, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc721Symbol(callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc721Symbol);
+        }
+
+        let apiPath = 'wallet/urc721symbol'
+        this.unichainJS.fullNode.request(apiPath, null, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc721Symbol(callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc721Symbol);
+        }
+
+        let apiPath = 'wallet/urc721symbol'
+        this.unichainJS.fullNode.request(apiPath, null, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc721TokenUri(callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc721TokenUri);
+        }
+
+        let apiPath = 'wallet/urc721tokenuri'
+        this.unichainJS.fullNode.request(apiPath, null, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc721TotalSupply(callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc721TotalSupply);
+        }
+
+        let apiPath = 'wallet/urc721totalsupply'
+        this.unichainJS.fullNode.request(apiPath, null, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc721IsApprovedForAll(callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc721IsApprovedForAll);
+        }
+
+        let apiPath = 'wallet/urc721isapprovedforall'
+        this.unichainJS.fullNode.request(apiPath, null, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc721OwnerOf(callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.urc721OwnerOf);
+        }
+
+        let apiPath = 'wallet/urc721ownerof'
+        this.unichainJS.fullNode.request(apiPath, null, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /** NEW CONTRACT URC40 */
+    /**
+     * 
+     * @param {*} owner_address 
+     * @param {*} data 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc40Create(owner_address, data, callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc40Create(owner_address, data));
+        }
+
+        // All data of new token
+        const {
+            symbol, 
+            name, 
+            decimals, 
+            max_supply, 
+            total_supply, 
+            start_time, 
+            end_time, 
+            url, 
+            fee, 
+            extra_fee_rate, 
+            fee_pool, 
+            burned, 
+            latest_operation_time, 
+            lot, 
+            fee_pool_origin, 
+            exch_unx_num,
+            exch_num, 
+            exch_enable, 
+            critical_update_time, 
+            create_acc_fee
+        } = data
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            symbol, 
+            name, 
+            decimals, 
+            max_supply, 
+            total_supply, 
+            start_time, 
+            end_time, 
+            url, 
+            fee, 
+            extra_fee_rate, 
+            fee_pool, 
+            burned, 
+            latest_operation_time, 
+            lot, 
+            fee_pool_origin, 
+            exch_unx_num,
+            exch_num, 
+            exch_enable, 
+            critical_update_time, 
+            create_acc_fee
+        };
+
+        let apiPath = 'wallet/urc40createcontract'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} owner_address 
+     * @param {*} from 
+     * @param {*} to 
+     * @param {*} address 
+     * @param {*} amount 
+     * @param {*} available_time 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc40TransferFrom(owner_address, from, to, address, amount, available_time, callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc40TransferFrom(owner_address, from, to, address, amount, available_time));
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            from: toHex(from),
+            to: toHex(to),
+            address: toHex(address),
+            amount, 
+            available_time, 
+        };
+
+        let apiPath = 'wallet/urc40transferfrom'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} owner_address 
+     * @param {*} address 
+     * @param {*} to 
+     * @param {*} amount 
+     * @param {*} available_time 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc40Transfer(owner_address, address, to, amount, available_time, callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc40Transfer(owner_address, address, to, amount, available_time));
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            address: toHex(address),
+            to: toHex(to),
+            amount, 
+            available_time, 
+        };
+
+        let apiPath = 'wallet/urc40transfer'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} owner_address 
+     * @param {*} address 
+     * @param {*} spender 
+     * @param {*} amount 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc40Approve(owner_address, address, spender, amount, callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc40Approve(owner_address, address, spender, amount));
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            address: toHex(address),
+            spender: toHex(to),
+            amount, 
+        };
+
+        let apiPath = 'wallet/urc40approve'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} owner_address 
+     * @param {*} address 
+     * @param {*} amount 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc40Mint(owner_address, address, amount, callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc40Mint(owner_address, address, amount));
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            address: toHex(address),
+            amount, 
+        };
+
+        let apiPath = 'wallet/urc40mint'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} owner_address 
+     * @param {*} address 
+     * @param {*} amount 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc40Burn(owner_address, address, amount, callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc40Burn(owner_address, address, amount));
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            address: toHex(address),
+            amount, 
+        };
+
+        let apiPath = 'wallet/urc40burn'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} owner_address 
+     * @param {*} to_address 
+     * @param {*} address 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc40TransferOwner(owner_address, to_address, address, callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc40TransferOwner(owner_address, to_address, address));
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            to_address: toHex(to_address),
+            address: toHex(address),
+        };
+
+        let apiPath = 'wallet/urc40transferowner'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} owner_address 
+     * @param {*} address 
+     * @param {*} amount 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc40Exchange(owner_address, address, amount, callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc40Exchange(owner_address, address, amount));
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            address: toHex(address),
+            amount
+        };
+
+        let apiPath = 'wallet/urc40exchange'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} owner_address 
+     * @param {*} address 
+     * @param {*} amount 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc40ContributePoolFee(owner_address, address, amount, callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc40ContributePoolFee(owner_address, address, amount));
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            address: toHex(address),
+            amount
+        };
+
+        let apiPath = 'wallet/urc40contributepoolfee'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} owner_address 
+     * @param {*} address 
+     * @param {*} fee 
+     * @param {*} extra_fee_rate 
+     * @param {*} lot 
+     * @param {*} url 
+     * @param {*} total_supply 
+     * @param {*} fee_pool 
+     * @param {*} exch_unx_num 
+     * @param {*} exch_num 
+     * @param {*} create_acc_fee 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc40UpdateParams(owner_address, address, fee, extra_fee_rate, lot, url, total_supply, fee_pool, exch_unx_num, exch_num, create_acc_fee, callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc40UpdateParams(owner_address, address, fee, extra_fee_rate, lot, url, total_supply, fee_pool, exch_unx_num, exch_num, create_acc_fee));
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            address: toHex(address),
+            fee, 
+            extra_fee_rate, 
+            lot, 
+            url,
+            total_supply, 
+            fee_pool, 
+            exch_unx_num, 
+            exch_num, 
+            create_acc_fee
+        };
+
+        let apiPath = 'wallet/urc40updateparams'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    /**
+     * 
+     * @param {*} owner_address 
+     * @param {*} address 
+     * @param {*} callback 
+     * @returns 
+     */
+    urc40WithdrawFuture(owner_address, address, callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc40WithdrawFuture(owner_address, address));
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            address: toHex(address),
+        };
+
+        let apiPath = 'wallet/urc40withdrawfuture'
         this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 }

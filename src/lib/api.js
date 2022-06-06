@@ -1466,7 +1466,7 @@ export default class Api {
      * @param {*} callback 
      * @returns 
      */
-    async posbridgeSetup(new_owner, min_validator, validators, options = {}, callback = false) {
+    async posBridgeSetup(new_owner, min_validator, validators, consensus_rate, predicate_native, predicate_token, predicate_nft, options = {}, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
@@ -1479,7 +1479,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.setupPosbridge, new_owner, min_validator, validators, options);
+            return this.injectPromise(this.posBridgeSetup, new_owner, min_validator, validators, consensus_rate, predicate_native, predicate_token, predicate_nft, options);
         }
 
         if (validators && validators.length < min_validator) {
@@ -1502,7 +1502,7 @@ export default class Api {
 
         try {
             const address = options.privateKey ? this.unichainJS.address.fromPrivateKey(options.privateKey) : options.address;
-            const transaction = await this.unichainJS.transactionBuilder.setupPosbridge(address, new_owner, min_validator, validators);
+            const transaction = await this.unichainJS.transactionBuilder.posBridgeSetup(address, new_owner, min_validator, validators, consensus_rate, predicate_native, predicate_token, predicate_nft);
             const signedTransaction = await this.sign(transaction, options.privateKey || undefined);
             const result = await this.sendRawTransaction(signedTransaction);
 
@@ -1527,7 +1527,7 @@ export default class Api {
      * @param {*} callback 
      * @returns 
      */
-    async posbridgeMapToken(root_token, root_chainid, child_token, child_chainid, root_or_child, type, options = {}, callback = false) {
+    async posBridgeMapToken(root_chainid, root_token, child_chainid, child_token, type, options = {}, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
@@ -1540,7 +1540,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.posbridgeMapToken, root_token, root_chainid, child_token, child_chainid, root_or_child, type, options);
+            return this.injectPromise(this.posBridgeMapToken, root_chainid, root_token, child_chainid, child_token, type, options);
         }
 
         options = {
@@ -1555,7 +1555,7 @@ export default class Api {
 
         try {
             const address = options.privateKey ? this.unichainJS.address.fromPrivateKey(options.privateKey) : options.address;
-            const transaction = await this.unichainJS.transactionBuilder.posbridgeMapToken(address, root_token, root_chainid, child_token, child_chainid, root_or_child, type);
+            const transaction = await this.unichainJS.transactionBuilder.posBridgeMapToken(address, root_chainid, root_token, child_chainid, child_token, type);
             const signedTransaction = await this.sign(transaction, options.privateKey || undefined);
             const result = await this.sendRawTransaction(signedTransaction);
 
@@ -1579,7 +1579,7 @@ export default class Api {
      * @param {*} callback 
      * @returns 
      */
-    async posbridgeCleanMapToken(root_token, root_chainid, child_token, child_chainid, type, options = {}, callback = false) {
+    async posBridgeCleanMapToken(root_chainid, root_token, child_chainid, child_token, type, options = {}, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
@@ -1592,7 +1592,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.posbridgeCleanMapToken, root_token, root_chainid, child_token, child_chainid, type, options);
+            return this.injectPromise(this.posBridgeCleanMapToken, root_chainid, root_token, child_chainid, child_token, type, options);
         }
 
         options = {
@@ -1607,7 +1607,7 @@ export default class Api {
 
         try {
             const address = options.privateKey ? this.unichainJS.address.fromPrivateKey(options.privateKey) : options.address;
-            const transaction = await this.unichainJS.transactionBuilder.posbridgeCleanMapToken(address, root_token, root_chainid, child_token, child_chainid, type);
+            const transaction = await this.unichainJS.transactionBuilder.posBridgeCleanMapToken(address, root_chainid, root_token, child_chainid, child_token, type);
             const signedTransaction = await this.sign(transaction, options.privateKey || undefined);
             const result = await this.sendRawTransaction(signedTransaction);
 
@@ -1627,7 +1627,7 @@ export default class Api {
      * @param {*} callback 
      * @returns 
      */
-    async posbridgeDeposit(root_token, receive_address, child_chainid, data, options = {}, callback = false) {
+    async posBridgeDeposit(root_token, child_chainid, receive_address, data, options = {}, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
@@ -1640,7 +1640,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.posbridgeDeposit, root_token, receive_address, child_chainid, data, options);
+            return this.injectPromise(this.posBridgeDeposit, root_token, child_chainid, receive_address, data, options);
         }
 
         options = {
@@ -1655,7 +1655,7 @@ export default class Api {
 
         try {
             const address = options.privateKey ? this.unichainJS.address.fromPrivateKey(options.privateKey) : options.address;
-            const transaction = await this.unichainJS.transactionBuilder.posbridgeDeposit(address, root_token, receive_address, child_chainid, data);
+            const transaction = await this.unichainJS.transactionBuilder.posBridgeDeposit(address, root_token, child_chainid, receive_address, data);
             const signedTransaction = await this.sign(transaction, options.privateKey || undefined);
             const result = await this.sendRawTransaction(signedTransaction);
 
@@ -1673,7 +1673,7 @@ export default class Api {
      * @param {*} callback 
      * @returns 
      */
-    async posBrigdeDepositExec(signatures, message, options = {}, callback = false) {
+    async posBridgeDepositExec(signatures, message, options = {}, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
@@ -1686,7 +1686,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.posBrigdeDepositExec, signatures, message, options);
+            return this.injectPromise(this.posBridgeDepositExec, signatures, message, options);
         }
 
         options = {
@@ -1701,7 +1701,7 @@ export default class Api {
 
         try {
             const address = options.privateKey ? this.unichainJS.address.fromPrivateKey(options.privateKey) : options.address;
-            const transaction = await this.unichainJS.transactionBuilder.posBrigdeDepositExec(address, signatures, message);
+            const transaction = await this.unichainJS.transactionBuilder.posBridgeDepositExec(address, signatures, message);
             const signedTransaction = await this.sign(transaction, options.privateKey || undefined);
             const result = await this.sendRawTransaction(signedTransaction);
 
@@ -1720,7 +1720,7 @@ export default class Api {
      * @param {*} callback 
      * @returns 
      */
-    async posBrigdeWithdraw(child_token, receive_address, data, options = {}, callback = false) {
+    async posBridgeWithdraw(child_token, receive_address, data, options = {}, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
@@ -1733,7 +1733,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.posBrigdeWithdraw, child_token, receive_address, data, options);
+            return this.injectPromise(this.posBridgeWithdraw, child_token, receive_address, data, options);
         }
 
         options = {
@@ -1748,7 +1748,7 @@ export default class Api {
 
         try {
             const address = options.privateKey ? this.unichainJS.address.fromPrivateKey(options.privateKey) : options.address;
-            const transaction = await this.unichainJS.transactionBuilder.posBrigdeWithdraw(address, child_token, receive_address, data);
+            const transaction = await this.unichainJS.transactionBuilder.posBridgeWithdraw(address, child_token, receive_address, data);
             const signedTransaction = await this.sign(transaction, options.privateKey || undefined);
             const result = await this.sendRawTransaction(signedTransaction);
 
@@ -1766,7 +1766,7 @@ export default class Api {
      * @param {*} callback 
      * @returns 
      */
-    async posBrigdeWithdrawExec(signatures, message, options = {}, callback = false) {
+    async posBridgeWithdrawExec(signatures, message, options = {}, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
@@ -1779,7 +1779,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.posBrigdeWithdrawExec, signatures, message, options);
+            return this.injectPromise(this.posBridgeWithdrawExec, signatures, message, options);
         }
 
         options = {
@@ -1794,7 +1794,7 @@ export default class Api {
 
         try {
             const address = options.privateKey ? this.unichainJS.address.fromPrivateKey(options.privateKey) : options.address;
-            const transaction = await this.unichainJS.transactionBuilder.posBrigdeWithdrawExec(address, signatures, message);
+            const transaction = await this.unichainJS.transactionBuilder.posBridgeWithdrawExec(address, signatures, message);
             const signedTransaction = await this.sign(transaction, options.privateKey || undefined);
             const result = await this.sendRawTransaction(signedTransaction);
 
