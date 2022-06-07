@@ -2471,22 +2471,18 @@ export default class TransactionBuilder {
      * @param {*} root_token 
      * @param {*} child_chainid 
      * @param {*} child_token 
-     * @param {*} type 
-     * 1: native
-     * 2: erc20
-     * 3: erc721]
      * @param {*} options 
      * @param {*} callback 
      * @returns unsigned transaction data
      */
-    posBridgeCleanMapToken(owner_address, root_chainid, root_token, child_chainid, child_token, type, options, callback = false) {
+    posBridgeCleanMapToken(owner_address, root_chainid, root_token, child_chainid, child_token, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
         }
 
         if (!callback){
-            return this.injectPromise(this.posBridgeCleanMapToken, root_chainid, root_token, child_chainid, child_token, type, options);
+            return this.injectPromise(this.posBridgeCleanMapToken, root_chainid, root_token, child_chainid, child_token, options);
         }
 
         let requestData = {
@@ -2495,7 +2491,6 @@ export default class TransactionBuilder {
             root_token, 
             child_chainid, 
             child_token, 
-            type
         };
 
         let apiPath = 'wallet/posbridgecleanmaptoken'
@@ -2644,7 +2639,7 @@ export default class TransactionBuilder {
         }
 
         if (!callback){
-            return this.injectPromise(this.urc721Create, owner_address, address, symbol, name, total_supply, minter, options);
+            return this.injectPromise(this.urc721Create, owner_address, symbol, name, total_supply, minter, options);
         }
 
         let requestData = {
@@ -2783,7 +2778,7 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc721Burn(owner_address, address, token_id, callback = false) {
+    urc721Burn(owner_address, address, token_id, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
@@ -2813,7 +2808,7 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc721Approve(owner_address, address, token_id, to, approve, callback = false) {
+    urc721Approve(owner_address, address, token_id, to, approve, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
@@ -2843,7 +2838,7 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc721SetApprovalForAll(owner_address, to_address, approve, callback = false) {
+    urc721SetApprovalForAll(owner_address, to_address, approve, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
@@ -2872,7 +2867,7 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc721TransferFrom(owner_address, address, to, token_id, callback = false) {
+    urc721TransferFrom(owner_address, address, to, token_id, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
@@ -3018,9 +3013,9 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc20Create(owner_address, data, callback = false) {
+    urc20Create(owner_address, data, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20Create(owner_address, data));
+            return this.injectPromise(this.urc20Create(owner_address, data, options));
         }
 
         // All data of new token
@@ -3086,9 +3081,9 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc20TransferFrom(owner_address, from, to, address, amount, available_time, callback = false) {
+    urc20TransferFrom(owner_address, from, to, address, amount, available_time, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20TransferFrom(owner_address, from, to, address, amount, available_time));
+            return this.injectPromise(this.urc20TransferFrom(owner_address, from, to, address, amount, available_time, options));
         }
 
         let requestData = {
@@ -3114,9 +3109,9 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc20Transfer(owner_address, address, to, amount, available_time, callback = false) {
+    urc20Transfer(owner_address, address, to, amount, available_time, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20Transfer(owner_address, address, to, amount, available_time));
+            return this.injectPromise(this.urc20Transfer(owner_address, address, to, amount, available_time, options));
         }
 
         let requestData = {
@@ -3140,9 +3135,9 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc20Approve(owner_address, address, spender, amount, callback = false) {
+    urc20Approve(owner_address, address, spender, amount, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20Approve(owner_address, address, spender, amount));
+            return this.injectPromise(this.urc20Approve(owner_address, address, spender, amount, options));
         }
 
         let requestData = {
@@ -3164,9 +3159,9 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc20Mint(owner_address, address, amount, callback = false) {
+    urc20Mint(owner_address, address, amount, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20Mint(owner_address, address, amount));
+            return this.injectPromise(this.urc20Mint(owner_address, address, amount, options));
         }
 
         let requestData = {
@@ -3187,9 +3182,9 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc20Burn(owner_address, address, amount, callback = false) {
+    urc20Burn(owner_address, address, amount, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20Burn(owner_address, address, amount));
+            return this.injectPromise(this.urc20Burn(owner_address, address, amount, options));
         }
 
         let requestData = {
@@ -3210,9 +3205,9 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc20TransferOwner(owner_address, to_address, address, callback = false) {
+    urc20TransferOwner(owner_address, to_address, address, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20TransferOwner(owner_address, to_address, address));
+            return this.injectPromise(this.urc20TransferOwner(owner_address, to_address, address, options));
         }
 
         let requestData = {
@@ -3233,9 +3228,9 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc20Exchange(owner_address, address, amount, callback = false) {
+    urc20Exchange(owner_address, address, amount, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20Exchange(owner_address, address, amount));
+            return this.injectPromise(this.urc20Exchange(owner_address, address, amount, options));
         }
 
         let requestData = {
@@ -3256,9 +3251,9 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc20ContributePoolFee(owner_address, address, amount, callback = false) {
+    urc20ContributePoolFee(owner_address, address, amount, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20ContributePoolFee(owner_address, address, amount));
+            return this.injectPromise(this.urc20ContributePoolFee(owner_address, address, amount, options));
         }
 
         let requestData = {
@@ -3287,9 +3282,9 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc20UpdateParams(owner_address, address, fee, extra_fee_rate, lot, url, total_supply, fee_pool, exch_unx_num, exch_num, create_acc_fee, callback = false) {
+    urc20UpdateParams(owner_address, address, fee, extra_fee_rate, lot, url, total_supply, fee_pool, exch_unx_num, exch_num, create_acc_fee, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20UpdateParams(owner_address, address, fee, extra_fee_rate, lot, url, total_supply, fee_pool, exch_unx_num, exch_num, create_acc_fee));
+            return this.injectPromise(this.urc20UpdateParams(owner_address, address, fee, extra_fee_rate, lot, url, total_supply, fee_pool, exch_unx_num, exch_num, create_acc_fee, options));
         }
 
         let requestData = {
@@ -3317,9 +3312,9 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc20WithdrawFuture(owner_address, address, callback = false) {
+    urc20WithdrawFuture(owner_address, address, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20WithdrawFuture(owner_address, address));
+            return this.injectPromise(this.urc20WithdrawFuture(owner_address, address, options));
         }
 
         let requestData = {
