@@ -2898,7 +2898,7 @@ export default class TransactionBuilder {
             return this.injectPromise(this.urc721BalanceOf);
         }
 
-        let apiPath = 'wallet/urc721balanceof'
+        let apiPath = 'walletsolidity/urc721balanceof'
         this.unichainJS.fullNode.request(apiPath, null, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
@@ -2912,21 +2912,7 @@ export default class TransactionBuilder {
             return this.injectPromise(this.urc721Name);
         }
 
-        let apiPath = 'wallet/urc721name'
-        this.unichainJS.fullNode.request(apiPath, null, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
-    }
-
-    /**
-     * 
-     * @param {*} callback 
-     * @returns 
-     */
-    urc721Symbol(callback = false) {
-        if (!callback){
-            return this.injectPromise(this.urc721Symbol);
-        }
-
-        let apiPath = 'wallet/urc721symbol'
+        let apiPath = 'walletsolidity/urc721name'
         this.unichainJS.fullNode.request(apiPath, null, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
@@ -2968,7 +2954,7 @@ export default class TransactionBuilder {
             return this.injectPromise(this.urc721TotalSupply);
         }
 
-        let apiPath = 'wallet/urc721totalsupply'
+        let apiPath = 'walletsolidity/urc721totalsupply'
         this.unichainJS.fullNode.request(apiPath, null, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
@@ -3001,7 +2987,7 @@ export default class TransactionBuilder {
             return this.injectPromise(this.urc721OwnerOf);
         }
 
-        let apiPath = 'wallet/urc721ownerof'
+        let apiPath = 'walletsolidity/urc721ownerof'
         this.unichainJS.fullNode.request(apiPath, null, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
