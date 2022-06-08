@@ -2895,7 +2895,7 @@ export default class TransactionBuilder {
      */
     urc721BalanceOf(owner_address, address, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc721BalanceOf(owner_address, address, options));
+            return this.injectPromise(this.urc721BalanceOf, owner_address, address, options);
         }
 
         let requestData = {
@@ -2904,7 +2904,7 @@ export default class TransactionBuilder {
         };
 
         let apiPath = 'walletsolidity/urc721balanceof'
-        this.unichainJS.fullNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+        this.unichainJS.solidityNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
     /**
@@ -2914,7 +2914,7 @@ export default class TransactionBuilder {
      */
     urc721Name(address, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc721Name(address, options));
+            return this.injectPromise(this.urc721Name, address, options);
         }
 
         let requestData = {
@@ -2922,7 +2922,7 @@ export default class TransactionBuilder {
         };
 
         let apiPath = 'walletsolidity/urc721name'
-        this.unichainJS.fullNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+        this.unichainJS.solidityNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
     /**
@@ -2932,7 +2932,7 @@ export default class TransactionBuilder {
      */
     urc721Symbol(address, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc721Symbol(address, options));
+            return this.injectPromise(this.urc721Symbol, address, options);
         }
 
         let requestData = {
@@ -2950,7 +2950,7 @@ export default class TransactionBuilder {
      */
     urc721TokenUri(address, id, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc721TokenUri(address, id, options));
+            return this.injectPromise(this.urc721TokenUri, address, id, options);
         }
 
         let requestData = {
@@ -2969,7 +2969,7 @@ export default class TransactionBuilder {
      */
     urc721TotalSupply(address, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc721TotalSupply(address, options));
+            return this.injectPromise(this.urc721TotalSupply, address, options);
         }
 
         let requestData = {
@@ -2977,7 +2977,7 @@ export default class TransactionBuilder {
         };
 
         let apiPath = 'walletsolidity/urc721totalsupply'
-        this.unichainJS.fullNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+        this.unichainJS.solidityNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
     /**
@@ -2987,7 +2987,7 @@ export default class TransactionBuilder {
      */
     urc721IsApprovedForAll(owner_address, operator, address, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc721IsApprovedForAll(owner_address, operator, address, options));
+            return this.injectPromise(this.urc721IsApprovedForAll, owner_address, operator, address, options);
         }
 
         let requestData = {
@@ -3007,7 +3007,7 @@ export default class TransactionBuilder {
      */
     urc721OwnerOf(address, id, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc721OwnerOf(address, id, options));
+            return this.injectPromise(this.urc721OwnerOf, address, id, options);
         }
 
         let requestData = {
@@ -3016,7 +3016,7 @@ export default class TransactionBuilder {
         };
 
         let apiPath = 'walletsolidity/urc721ownerof'
-        this.unichainJS.fullNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+        this.unichainJS.solidityNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
     /** NEW CONTRACT URC20 */
@@ -3029,7 +3029,7 @@ export default class TransactionBuilder {
      */
     urc20Create(owner_address, data, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20Create(owner_address, data, options));
+            return this.injectPromise(this.urc20Create, owner_address, data, options);
         }
 
         // All data of new token
@@ -3097,7 +3097,7 @@ export default class TransactionBuilder {
      */
     urc20TransferFrom(owner_address, from, to, address, amount, available_time, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20TransferFrom(owner_address, from, to, address, amount, available_time, options));
+            return this.injectPromise(this.urc20TransferFrom, owner_address, from, to, address, amount, available_time, options);
         }
 
         let requestData = {
@@ -3125,7 +3125,7 @@ export default class TransactionBuilder {
      */
     urc20Transfer(owner_address, address, to, amount, available_time, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20Transfer(owner_address, address, to, amount, available_time, options));
+            return this.injectPromise(this.urc20Transfer, owner_address, address, to, amount, available_time, options);
         }
 
         let requestData = {
@@ -3151,7 +3151,7 @@ export default class TransactionBuilder {
      */
     urc20Approve(owner_address, address, spender, amount, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20Approve(owner_address, address, spender, amount, options));
+            return this.injectPromise(this.urc20Approve, owner_address, address, spender, amount, options);
         }
 
         let requestData = {
@@ -3175,7 +3175,7 @@ export default class TransactionBuilder {
      */
     urc20Mint(owner_address, address, amount, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20Mint(owner_address, address, amount, options));
+            return this.injectPromise(this.urc20Mint, owner_address, address, amount, options);
         }
 
         let requestData = {
@@ -3198,7 +3198,7 @@ export default class TransactionBuilder {
      */
     urc20Burn(owner_address, address, amount, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20Burn(owner_address, address, amount, options));
+            return this.injectPromise(this.urc20Burn, owner_address, address, amount, options);
         }
 
         let requestData = {
@@ -3221,7 +3221,7 @@ export default class TransactionBuilder {
      */
     urc20TransferOwner(owner_address, to_address, address, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20TransferOwner(owner_address, to_address, address, options));
+            return this.injectPromise(this.urc20TransferOwner, owner_address, to_address, address, options);
         }
 
         let requestData = {
@@ -3244,7 +3244,7 @@ export default class TransactionBuilder {
      */
     urc20Exchange(owner_address, address, amount, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20Exchange(owner_address, address, amount, options));
+            return this.injectPromise(this.urc20Exchange, owner_address, address, amount, options);
         }
 
         let requestData = {
@@ -3267,7 +3267,7 @@ export default class TransactionBuilder {
      */
     urc20ContributePoolFee(owner_address, address, amount, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20ContributePoolFee(owner_address, address, amount, options));
+            return this.injectPromise(this.urc20ContributePoolFee, owner_address, address, amount, options);
         }
 
         let requestData = {
@@ -3298,7 +3298,7 @@ export default class TransactionBuilder {
      */
     urc20UpdateParams(owner_address, address, fee, extra_fee_rate, lot, url, total_supply, fee_pool, exch_unx_num, exch_num, create_acc_fee, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20UpdateParams(owner_address, address, fee, extra_fee_rate, lot, url, total_supply, fee_pool, exch_unx_num, exch_num, create_acc_fee, options));
+            return this.injectPromise(this.urc20UpdateParams, owner_address, address, fee, extra_fee_rate, lot, url, total_supply, fee_pool, exch_unx_num, exch_num, create_acc_fee, options);
         }
 
         let requestData = {
@@ -3328,7 +3328,7 @@ export default class TransactionBuilder {
      */
     urc20WithdrawFuture(owner_address, address, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20WithdrawFuture(owner_address, address, options));
+            return this.injectPromise(this.urc20WithdrawFuture, owner_address, address, options);
         }
 
         let requestData = {
@@ -3342,7 +3342,7 @@ export default class TransactionBuilder {
 
     urc20FutureGet(owner_address, address, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20FutureGet(owner_address, address, options));
+            return this.injectPromise(this.urc20FutureGet, owner_address, address, options);
         }
 
         let requestData = {
@@ -3356,7 +3356,7 @@ export default class TransactionBuilder {
 
     urc20ContractList(address, symbol, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20ContractList(address, symbol, options));
+            return this.injectPromise(this.urc20ContractList, address, symbol, options);
         }
 
         let requestData = {
@@ -3370,7 +3370,7 @@ export default class TransactionBuilder {
 
     urc20Name(address, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20Name(address, options));
+            return this.injectPromise(this.urc20Name, address, options);
         }
 
         let requestData = {
@@ -3383,7 +3383,7 @@ export default class TransactionBuilder {
 
     urc20Symbol(address, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20Symbol(address, options));
+            return this.injectPromise(this.urc20Symbol, address, options);
         }
 
         let requestData = {
@@ -3396,7 +3396,7 @@ export default class TransactionBuilder {
 
     urc20Decimals(address, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20Decimals(address, options));
+            return this.injectPromise(this.urc20Decimals, address, options);
         }
 
         let requestData = {
@@ -3409,7 +3409,7 @@ export default class TransactionBuilder {
 
     urc20TotalSupply(address, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20TotalSupply(address, options));
+            return this.injectPromise(this.urc20TotalSupply, address, options);
         }
 
         let requestData = {
@@ -3422,7 +3422,7 @@ export default class TransactionBuilder {
 
     urc20TotalSupply(address, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20TotalSupply(address, options));
+            return this.injectPromise(this.urc20TotalSupply, address, options);
         }
 
         let requestData = {
@@ -3435,7 +3435,7 @@ export default class TransactionBuilder {
 
     urc20BalanceOf(owner_address, address, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20BalanceOf(owner_address, address, options));
+            return this.injectPromise(this.urc20BalanceOf, owner_address, address, options);
         }
 
         let requestData = {
@@ -3449,7 +3449,7 @@ export default class TransactionBuilder {
 
     urc20GetOwner(address, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20GetOwner(address, options));
+            return this.injectPromise(this.urc20GetOwner, address, options);
         }
 
         let requestData = {
@@ -3462,7 +3462,7 @@ export default class TransactionBuilder {
 
     urc20Allowance(owner, address, spender, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc20Allowance(owner, address, spender, options));
+            return this.injectPromise(this.urc20Allowance, owner, address, spender, options);
         }
 
         let requestData = {

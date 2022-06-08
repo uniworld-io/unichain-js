@@ -2244,7 +2244,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.urc721BalanceOf(urc721Address, options));
+            return this.injectPromise(this.urc721BalanceOf, urc721Address, options);
         }
 
         options = {
@@ -2279,7 +2279,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.urc721Name(urc721Address, options));
+            return this.injectPromise(this.urc721Name, urc721Address, options);
         }
 
         try {
@@ -2302,7 +2302,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.urc721Symbol(urc721Address, options));
+            return this.injectPromise(this.urc721Symbol, urc721Address, options);
         }
 
         try {
@@ -2325,7 +2325,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.urc721TokenUri(urc721Address, id, options));
+            return this.injectPromise(this.urc721TokenUri, urc721Address, id, options);
         }
 
         try {
@@ -2348,7 +2348,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.urc721TotalSupply(urc721Address, options));
+            return this.injectPromise(this.urc721TotalSupply, urc721Address, options);
         }
 
         try {
@@ -2377,7 +2377,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.urc721IsApprovedForAll(operator, urc721Address, options));
+            return this.injectPromise(this.urc721IsApprovedForAll, operator, urc721Address, options);
         }
 
         options = {
@@ -2412,7 +2412,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.urc721OwnerOf(urc721Address, id, options));
+            return this.injectPromise(this.urc721OwnerOf, urc721Address, id, options);
         }
 
         try {
@@ -2962,7 +2962,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.urc20FutureGet(urc20Address, options));
+            return this.injectPromise(this.urc20FutureGet, urc20Address, options);
         }
 
         options = {
@@ -3000,7 +3000,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.urc20ContractList(urc20Address, symbol, options));
+            return this.injectPromise(this.urc20ContractList, urc20Address, symbol, options);
         }
 
         try {
@@ -3026,7 +3026,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.urc20Name(urc20Address, options));
+            return this.injectPromise(this.urc20Name, urc20Address, options);
         }
 
         try {
@@ -3052,7 +3052,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.urc20Symbol(urc20Address, options));
+            return this.injectPromise(this.urc20Symbol, urc20Address, options);
         }
 
         try {
@@ -3078,7 +3078,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.urc20Decimals(urc20Address, options));
+            return this.injectPromise(this.urc20Decimals, urc20Address, options);
         }
 
         try {
@@ -3104,7 +3104,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.urc20TotalSupply(urc20Address, options));
+            return this.injectPromise(this.urc20TotalSupply, urc20Address, options);
         }
 
         try {
@@ -3136,7 +3136,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.urc20BalanceOf(urc20Address, options));
+            return this.injectPromise(this.urc20BalanceOf, urc20Address, options);
         }
 
         options = {
@@ -3173,7 +3173,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.urc20GetOwner(urc20Address, options));
+            return this.injectPromise(this.urc20GetOwner, urc20Address, options);
         }
 
         try {
@@ -3206,7 +3206,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.urc20Allowance(urc20Address, spender, options));
+            return this.injectPromise(this.urc20Allowance, urc20Address, spender, options);
         }
 
         options = {
