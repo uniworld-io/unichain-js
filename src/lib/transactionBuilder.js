@@ -2893,13 +2893,18 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc721BalanceOf(callback = false) {
+    urc721BalanceOf(owner_address, address, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc721BalanceOf);
+            return this.injectPromise(this.urc721BalanceOf(owner_address, address, options));
         }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            address: toHex(address),
+        };
 
         let apiPath = 'walletsolidity/urc721balanceof'
-        this.unichainJS.fullNode.request(apiPath, null, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+        this.unichainJS.fullNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
     /**
@@ -2907,13 +2912,17 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc721Name(callback = false) {
+    urc721Name(address, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc721Name);
+            return this.injectPromise(this.urc721Name(address, options));
         }
+
+        let requestData = {
+            address: toHex(address),
+        };
 
         let apiPath = 'walletsolidity/urc721name'
-        this.unichainJS.fullNode.request(apiPath, null, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+        this.unichainJS.fullNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
     /**
@@ -2921,13 +2930,17 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc721Symbol(callback = false) {
+    urc721Symbol(address, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc721Symbol);
+            return this.injectPromise(this.urc721Symbol(address, options));
         }
+
+        let requestData = {
+            address: toHex(address),
+        };
 
         let apiPath = 'wallet/urc721symbol'
-        this.unichainJS.fullNode.request(apiPath, null, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+        this.unichainJS.fullNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
     /**
@@ -2935,13 +2948,18 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc721TokenUri(callback = false) {
+    urc721TokenUri(address, id, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc721TokenUri);
+            return this.injectPromise(this.urc721TokenUri(address, id, options));
         }
+
+        let requestData = {
+            address: toHex(address),
+            id,
+        };
 
         let apiPath = 'wallet/urc721tokenuri'
-        this.unichainJS.fullNode.request(apiPath, null, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+        this.unichainJS.fullNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
     /**
@@ -2949,13 +2967,17 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc721TotalSupply(callback = false) {
+    urc721TotalSupply(address, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc721TotalSupply);
+            return this.injectPromise(this.urc721TotalSupply(address, options));
         }
+
+        let requestData = {
+            address: toHex(address),
+        };
 
         let apiPath = 'walletsolidity/urc721totalsupply'
-        this.unichainJS.fullNode.request(apiPath, null, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+        this.unichainJS.fullNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
     /**
@@ -2963,13 +2985,19 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc721IsApprovedForAll(callback = false) {
+    urc721IsApprovedForAll(owner_address, operator, address, options, callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc721IsApprovedForAll);
+            return this.injectPromise(this.urc721IsApprovedForAll(owner_address, operator, address, options));
         }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            operator: toHex(operator),
+            address: toHex(address)
+        };
 
         let apiPath = 'wallet/urc721isapprovedforall'
-        this.unichainJS.fullNode.request(apiPath, null, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+        this.unichainJS.fullNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
     /**
@@ -2977,21 +3005,21 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc721OwnerOf(callback = false) {
-        if (utils.isFunction(options)) {
-            callback = options;
-            options = {};
+    urc721OwnerOf(address, id, options, callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc721OwnerOf(address, id, options));
         }
 
-        if (!callback){
-            return this.injectPromise(this.urc721OwnerOf);
-        }
+        let requestData = {
+            address: toHex(address),
+            id,
+        };
 
         let apiPath = 'walletsolidity/urc721ownerof'
-        this.unichainJS.fullNode.request(apiPath, null, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+        this.unichainJS.fullNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 
-    /** NEW CONTRACT URC40 */
+    /** NEW CONTRACT URC20 */
     /**
      * 
      * @param {*} owner_address 
@@ -3310,5 +3338,140 @@ export default class TransactionBuilder {
 
         let apiPath = 'wallet/urc20withdrawfuture'
         this.unichainJS.fullNode.request(apiPath, requestData, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    urc20FutureGet(owner_address, address, options, callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc20FutureGet(owner_address, address, options));
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            address: toHex(address),
+        };
+
+        let apiPath = 'wallet/urc20futureget'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    urc20ContractList(address, symbol, options, callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc20ContractList(address, symbol, options));
+        }
+
+        let requestData = {
+            address: toHex(address),
+            symbol,
+        };
+
+        let apiPath = 'wallet/urc20contractlist'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    urc20Name(address, options, callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc20Name(address, options));
+        }
+
+        let requestData = {
+            address: toHex(address),
+        };
+
+        let apiPath = 'wallet/urc20name'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    urc20Symbol(address, options, callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc20Symbol(address, options));
+        }
+
+        let requestData = {
+            address: toHex(address),
+        };
+
+        let apiPath = 'wallet/urc20symbol'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    urc20Decimals(address, options, callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc20Decimals(address, options));
+        }
+
+        let requestData = {
+            address: toHex(address),
+        };
+
+        let apiPath = 'wallet/urc20decimals'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    urc20TotalSupply(address, options, callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc20TotalSupply(address, options));
+        }
+
+        let requestData = {
+            address: toHex(address),
+        };
+
+        let apiPath = 'wallet/urc20totalsupply'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    urc20TotalSupply(address, options, callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc20TotalSupply(address, options));
+        }
+
+        let requestData = {
+            address: toHex(address),
+        };
+
+        let apiPath = 'wallet/urc20totalsupply'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    urc20BalanceOf(owner_address, address, options, callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc20BalanceOf(owner_address, address, options));
+        }
+
+        let requestData = {
+            owner_address: toHex(owner_address),
+            address: toHex(address),
+        };
+
+        let apiPath = 'wallet/urc20balanceof'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    urc20GetOwner(address, options, callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc20GetOwner(address, options));
+        }
+
+        let requestData = {
+            address: toHex(address),
+        };
+
+        let apiPath = 'wallet/urc20getowner'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
+    }
+
+    urc20Allowance(owner, address, spender, options, callback = false) {
+        if (!callback){
+            return this.injectPromise(this.urc20Allowance(owner, address, spender, options));
+        }
+
+        let requestData = {
+            owner: toHex(owner),
+            address: toHex(address),
+            spender: toHex(spender)
+        };
+
+        let apiPath = 'wallet/urc20allowance'
+        this.unichainJS.fullNode.request(apiPath, requestData, 'get').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
 }
