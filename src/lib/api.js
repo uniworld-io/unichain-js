@@ -2141,7 +2141,7 @@ export default class Api {
      * @param {*} callback 
      * @returns 
      */
-    async urc721SetApprovalForAll(to_address, approve, options, callback = false) {
+    async urc721SetApprovalForAll(urc721Address, to_address, approve, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
@@ -2154,7 +2154,7 @@ export default class Api {
         }
 
         if (!callback){
-            return this.injectPromise(this.urc721SetApprovalForAll, to_address, approve, options);
+            return this.injectPromise(this.urc721SetApprovalForAll, urc721Address, to_address, approve, options);
         }
 
         options = {
@@ -2169,7 +2169,7 @@ export default class Api {
 
         try {
             const address = options.privateKey ? this.unichainJS.address.fromPrivateKey(options.privateKey) : options.address;
-            const transaction = await this.unichainJS.transactionBuilder.urc721SetApprovalForAll(address, to_address, approve, options);
+            const transaction = await this.unichainJS.transactionBuilder.urc721SetApprovalForAll(address, urc721Address, to_address, approve, options);
             const signedTransaction = await this.sign(transaction, options.privateKey || undefined);
             const result = await this.sendRawTransaction(signedTransaction);
 

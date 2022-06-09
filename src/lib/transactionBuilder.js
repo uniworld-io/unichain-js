@@ -2448,7 +2448,7 @@ export default class TransactionBuilder {
         }
 
         if (!callback){
-            return this.injectPromise(this.posBridgeMapToken, root_chainid, root_token, child_chainid, child_token, type, options);
+            return this.injectPromise(this.posBridgeMapToken, owner_address, root_chainid, root_token, child_chainid, child_token, type, options);
         }
 
         let requestData = {
@@ -2482,7 +2482,7 @@ export default class TransactionBuilder {
         }
 
         if (!callback){
-            return this.injectPromise(this.posBridgeCleanMapToken, root_chainid, root_token, child_chainid, child_token, options);
+            return this.injectPromise(this.posBridgeCleanMapToken, owner_address, root_chainid, root_token, child_chainid, child_token, options);
         }
 
         let requestData = {
@@ -2838,18 +2838,19 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc721SetApprovalForAll(owner_address, to_address, approve, options, callback = false) {
+    urc721SetApprovalForAll(owner_address, address, to_address, approve, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
         }
 
         if (!callback){
-            return this.injectPromise(this.urc721SetApprovalForAll, owner_address, to_address, approve, options);
+            return this.injectPromise(this.urc721SetApprovalForAll, owner_address, address, to_address, approve, options);
         }
 
         let requestData = {
             owner_address: toHex(owner_address),
+            address: toHex(address),
             to_address: toHex(to_address),
             approve,
         };
