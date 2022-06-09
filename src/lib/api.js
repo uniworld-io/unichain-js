@@ -315,7 +315,7 @@ export default class Api {
 
         address = this.unichainJS.address.toHex(address);
 
-        this.unichainJS.solidityNode.request('walletsolidity/getaccount', {
+        this.unichainJS.fullNode.request('wallet/getaccount', {
             address
         }, 'post').then(account => {
             callback(null, account);
@@ -2231,12 +2231,59 @@ export default class Api {
      * @param {*} callback 
      * @returns 
      */
-    async urc721BalanceOf(callback = false) {
-        if (!callback){
-            return this.injectPromise(this.urc721BalanceOf);
+    async urc721BalanceOf(urc721Address, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
         }
+
+        if (typeof options === 'string') {
+            options = {
+                privateKey: options
+            };
+        }
+
+        if (!callback){
+            return this.injectPromise(this.urc721BalanceOf, urc721Address, options);
+        }
+
+        options = {
+            privateKey: this.unichainJS.defaultPrivateKey,
+            address: this.unichainJS.defaultAddress.hex,
+            ...options
+        };
+
+        if (!options.privateKey && !options.address){
+            return callback('Function requires either a private key or address to be set');
+        }
+
         try {
-            const resp = await this.unichainJS.transactionBuilder.urc721BalanceOf();
+            const address = options.privateKey ? this.unichainJS.address.fromPrivateKey(options.privateKey) : options.address;
+            const result = await this.unichainJS.transactionBuilder.urc721BalanceOf(address, urc721Address, options);
+
+            return callback(null, result);
+        } catch (ex) {
+            return callback(ex);
+        }
+    }
+
+    /**
+     * 
+     * @param {*} callback 
+     * @returns 
+     */
+    async urc721Name(urc721Address, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.urc721Name, urc721Address, options);
+        }
+
+        try {
+            const resp = await this.unichainJS.transactionBuilder.urc721Name(urc721Address, options);
             return callback(null, resp);
         } catch (ex) {
             return callback(ex);
@@ -2248,12 +2295,18 @@ export default class Api {
      * @param {*} callback 
      * @returns 
      */
-    async urc721Name(callback = false) {
-        if (!callback){
-            return this.injectPromise(this.urc721Name);
+    async urc721Symbol(urc721Address, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
         }
+
+        if (!callback){
+            return this.injectPromise(this.urc721Symbol, urc721Address, options);
+        }
+
         try {
-            const resp = await this.unichainJS.transactionBuilder.urc721Name();
+            const resp = await this.unichainJS.transactionBuilder.urc721Symbol(urc721Address, options);
             return callback(null, resp);
         } catch (ex) {
             return callback(ex);
@@ -2265,12 +2318,18 @@ export default class Api {
      * @param {*} callback 
      * @returns 
      */
-    async urc721Symbol(callback = false) {
-        if (!callback){
-            return this.injectPromise(this.urc721Symbol);
+    async urc721TokenUri(urc721Address, id, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
         }
+
+        if (!callback){
+            return this.injectPromise(this.urc721TokenUri, urc721Address, id, options);
+        }
+
         try {
-            const resp = await this.unichainJS.transactionBuilder.urc721Symbol();
+            const resp = await this.unichainJS.transactionBuilder.urc721TokenUri(urc721Address, id, options);
             return callback(null, resp);
         } catch (ex) {
             return callback(ex);
@@ -2282,12 +2341,18 @@ export default class Api {
      * @param {*} callback 
      * @returns 
      */
-    async urc721TokenUri(callback = false) {
-        if (!callback){
-            return this.injectPromise(this.urc721TokenUri);
+    async urc721TotalSupply(urc721Address, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
         }
+
+        if (!callback){
+            return this.injectPromise(this.urc721TotalSupply, urc721Address, options);
+        }
+
         try {
-            const resp = await this.unichainJS.transactionBuilder.urc721TokenUri();
+            const resp = await this.unichainJS.transactionBuilder.urc721TotalSupply(urc721Address, options);
             return callback(null, resp);
         } catch (ex) {
             return callback(ex);
@@ -2299,13 +2364,37 @@ export default class Api {
      * @param {*} callback 
      * @returns 
      */
-    async urc721TotalSupply(callback = false) {
-        if (!callback){
-            return this.injectPromise(this.urc721TotalSupply);
+    async urc721IsApprovedForAll(operator, urc721Address, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
         }
+
+        if (typeof options === 'string') {
+            options = {
+                privateKey: options
+            };
+        }
+
+        if (!callback){
+            return this.injectPromise(this.urc721IsApprovedForAll, operator, urc721Address, options);
+        }
+
+        options = {
+            privateKey: this.unichainJS.defaultPrivateKey,
+            address: this.unichainJS.defaultAddress.hex,
+            ...options
+        };
+
+        if (!options.privateKey && !options.address){
+            return callback('Function requires either a private key or address to be set');
+        }
+
         try {
-            const resp = await this.unichainJS.transactionBuilder.urc721TotalSupply();
-            return callback(null, resp);
+            const address = options.privateKey ? this.unichainJS.address.fromPrivateKey(options.privateKey) : options.address;
+            const result = await this.unichainJS.transactionBuilder.urc721IsApprovedForAll(address, operator, urc721Address, options);
+
+            return callback(null, result);
         } catch (ex) {
             return callback(ex);
         }
@@ -2316,29 +2405,18 @@ export default class Api {
      * @param {*} callback 
      * @returns 
      */
-    async urc721IsApprovedForAll(callback = false) {
-        if (!callback){
-            return this.injectPromise(this.urc721IsApprovedForAll);
+    async urc721OwnerOf(urc721Address, id, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
         }
-        try {
-            const resp = await this.unichainJS.transactionBuilder.urc721IsApprovedForAll();
-            return callback(null, resp);
-        } catch (ex) {
-            return callback(ex);
-        }
-    }
 
-    /**
-     * 
-     * @param {*} callback 
-     * @returns 
-     */
-    async urc721OwnerOf(callback = false) {
         if (!callback){
-            return this.injectPromise(this.urc721OwnerOf);
+            return this.injectPromise(this.urc721OwnerOf, urc721Address, id, options);
         }
+
         try {
-            const resp = await this.unichainJS.transactionBuilder.urc721OwnerOf();
+            const resp = await this.unichainJS.transactionBuilder.urc721OwnerOf(urc721Address, id, options);
             return callback(null, resp);
         } catch (ex) {
             return callback(ex);
@@ -2864,6 +2942,293 @@ export default class Api {
         }
     }
     
+    /**
+     * 
+     * @param {*} urc20Address 
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns 
+     */
+    async urc20FutureGet(urc20Address, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (typeof options === 'string') {
+            options = {
+                privateKey: options
+            };
+        }
+
+        if (!callback){
+            return this.injectPromise(this.urc20FutureGet, urc20Address, options);
+        }
+
+        options = {
+            privateKey: this.unichainJS.defaultPrivateKey,
+            address: this.unichainJS.defaultAddress.hex,
+            ...options
+        };
+
+        if (!options.privateKey && !options.address){
+            return callback('Function requires either a private key or address to be set');
+        }
+
+        try {
+            const address = options.privateKey ? this.unichainJS.address.fromPrivateKey(options.privateKey) : options.address;
+            const result = await this.unichainJS.transactionBuilder.urc20FutureGet(address, urc20Address, options);
+
+            return callback(null, result);
+        } catch (ex) {
+            return callback(ex);
+        }
+    }
+
+    /**
+     * 
+     * @param {*} urc20Address 
+     * @param {*} symbol 
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns 
+     */
+    async urc20ContractList(urc20Address, symbol, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.urc20ContractList, urc20Address, symbol, options);
+        }
+
+        try {
+            const result = await this.unichainJS.transactionBuilder.urc20ContractList(urc20Address, symbol, options);
+
+            return callback(null, result);
+        } catch (ex) {
+            return callback(ex);
+        }
+    }
+
+    /**
+     * 
+     * @param {*} urc20Address 
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns 
+     */
+    async urc20Name(urc20Address, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.urc20Name, urc20Address, options);
+        }
+
+        try {
+            const result = await this.unichainJS.transactionBuilder.urc20Name(urc20Address, options);
+
+            return callback(null, result);
+        } catch (ex) {
+            return callback(ex);
+        }
+    }
+
+    /**
+     * 
+     * @param {*} urc20Address 
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns 
+     */
+    async urc20Symbol(urc20Address, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.urc20Symbol, urc20Address, options);
+        }
+
+        try {
+            const result = await this.unichainJS.transactionBuilder.urc20Symbol(urc20Address, options);
+
+            return callback(null, result);
+        } catch (ex) {
+            return callback(ex);
+        }
+    }
+
+    /**
+     * 
+     * @param {*} urc20Address 
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns 
+     */
+    async urc20Decimals(urc20Address, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.urc20Decimals, urc20Address, options);
+        }
+
+        try {
+            const result = await this.unichainJS.transactionBuilder.urc20Decimals(urc20Address, options);
+
+            return callback(null, result);
+        } catch (ex) {
+            return callback(ex);
+        }
+    }
+
+    /**
+     * 
+     * @param {*} urc20Address 
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns 
+     */
+    async urc20TotalSupply(urc20Address, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.urc20TotalSupply, urc20Address, options);
+        }
+
+        try {
+            const result = await this.unichainJS.transactionBuilder.urc20TotalSupply(urc20Address, options);
+
+            return callback(null, result);
+        } catch (ex) {
+            return callback(ex);
+        }
+    }
+
+    /**
+     * 
+     * @param {*} urc20Address 
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns 
+     */
+    async urc20BalanceOf(urc20Address, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (typeof options === 'string') {
+            options = {
+                privateKey: options
+            };
+        }
+
+        if (!callback){
+            return this.injectPromise(this.urc20BalanceOf, urc20Address, options);
+        }
+
+        options = {
+            privateKey: this.unichainJS.defaultPrivateKey,
+            address: this.unichainJS.defaultAddress.hex,
+            ...options
+        };
+
+        if (!options.privateKey && !options.address){
+            return callback('Function requires either a private key or address to be set');
+        }
+
+        try {
+            const address = options.privateKey ? this.unichainJS.address.fromPrivateKey(options.privateKey) : options.address;
+            const result = await this.unichainJS.transactionBuilder.urc20BalanceOf(address, urc20Address, options);
+
+            return callback(null, result);
+        } catch (ex) {
+            return callback(ex);
+        }
+    }
+
+    /**
+     * 
+     * @param {*} urc20Address 
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns 
+     */
+    async urc20GetOwner(urc20Address, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (!callback){
+            return this.injectPromise(this.urc20GetOwner, urc20Address, options);
+        }
+
+        try {
+            const result = await this.unichainJS.transactionBuilder.urc20GetOwner(urc20Address, options);
+
+            return callback(null, result);
+        } catch (ex) {
+            return callback(ex);
+        }
+    }
+
+    /**
+     * 
+     * @param {*} urc20Address 
+     * @param {*} spender 
+     * @param {*} options 
+     * @param {*} callback 
+     * @returns 
+     */
+    async urc20Allowance(urc20Address, spender, options, callback = false) {
+        if (utils.isFunction(options)) {
+            callback = options;
+            options = {};
+        }
+
+        if (typeof options === 'string') {
+            options = {
+                privateKey: options
+            };
+        }
+
+        if (!callback){
+            return this.injectPromise(this.urc20Allowance, urc20Address, spender, options);
+        }
+
+        options = {
+            privateKey: this.unichainJS.defaultPrivateKey,
+            address: this.unichainJS.defaultAddress.hex,
+            ...options
+        };
+
+        if (!options.privateKey && !options.address){
+            return callback('Function requires either a private key or address to be set');
+        }
+
+        try {
+            const address = options.privateKey ? this.unichainJS.address.fromPrivateKey(options.privateKey) : options.address;
+            const result = await this.unichainJS.transactionBuilder.urc20Allowance(address, urc20Address, spender, options);
+
+            return callback(null, result);
+        } catch (ex) {
+            return callback(ex);
+        }
+    }
+
     // async subcrible(topic, confirm = true, since = Date.now(), sort = 'timeStamp', cb) {
     //     const timer = since
     //     setInterval(() => {
