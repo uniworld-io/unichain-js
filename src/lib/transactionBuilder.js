@@ -2448,7 +2448,7 @@ export default class TransactionBuilder {
         }
 
         if (!callback){
-            return this.injectPromise(this.posBridgeMapToken, root_chainid, root_token, child_chainid, child_token, type, options);
+            return this.injectPromise(this.posBridgeMapToken, owner_address, root_chainid, root_token, child_chainid, child_token, type, options);
         }
 
         let requestData = {
@@ -2482,7 +2482,7 @@ export default class TransactionBuilder {
         }
 
         if (!callback){
-            return this.injectPromise(this.posBridgeCleanMapToken, root_chainid, root_token, child_chainid, child_token, options);
+            return this.injectPromise(this.posBridgeCleanMapToken, owner_address, root_chainid, root_token, child_chainid, child_token, options);
         }
 
         let requestData = {
