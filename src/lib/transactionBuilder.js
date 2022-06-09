@@ -2838,18 +2838,19 @@ export default class TransactionBuilder {
      * @param {*} callback 
      * @returns 
      */
-    urc721SetApprovalForAll(owner_address, to_address, approve, options, callback = false) {
+    urc721SetApprovalForAll(owner_address, address, to_address, approve, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
         }
 
         if (!callback){
-            return this.injectPromise(this.urc721SetApprovalForAll, owner_address, to_address, approve, options);
+            return this.injectPromise(this.urc721SetApprovalForAll, owner_address, address, to_address, approve, options);
         }
 
         let requestData = {
             owner_address: toHex(owner_address),
+            address: toHex(address),
             to_address: toHex(to_address),
             approve,
         };
