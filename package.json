@@ -1,6 +1,6 @@
 {
     "name": "@uniworld/unichain-js",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "description": "JavaScript SDK that encapsulates the UNICHAIN HTTP API",
     "main": "dist/UnichainJS.node.js",
     "scripts": {
