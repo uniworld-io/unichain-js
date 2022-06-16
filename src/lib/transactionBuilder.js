@@ -2546,7 +2546,7 @@ export default class TransactionBuilder {
         }
 
         if (!callback){
-            return this.injectPromise(this.posBridgeDepositExec, owner_address, calldata, options);
+            return this.injectPromise(this.posBridgeDepositExec, owner_address, signatures, message, options);
         }
 
         let requestData = {
