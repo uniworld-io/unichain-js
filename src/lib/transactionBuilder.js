@@ -2408,7 +2408,7 @@ export default class TransactionBuilder {
         }
 
         if (!callback){
-            return this.injectPromise(this.setupPosBridge, owner_address, new_owner, min_validator, validators, consensus_rate, predicate_native, predicate_token, predicate_nft, options);
+            return this.injectPromise(this.posBridgeSetup, owner_address, new_owner, min_validator, validators, consensus_rate, predicate_native, predicate_token, predicate_nft, options);
         }
 
         let requestData = {
